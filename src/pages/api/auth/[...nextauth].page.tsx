@@ -4,13 +4,10 @@ import { initializeApollo } from "src/graphql/apollo/client";
 import type {
   SocialAuthMutation,
   SocialAuthMutationVariables,
-  // UpdateProfileMutation,
-  // UpdateProfileMutationVariables,
+  UpdateProfileMutation,
+  UpdateProfileMutationVariables,
 } from "src/graphql/schemas/schema";
-import {
-  SocialAuthDocument,
-  // UpdateProfileDocument
-} from "src/graphql/schemas/schema";
+import { SocialAuthDocument, UpdateProfileDocument } from "src/graphql/schemas/schema";
 
 // TODO: 各引数で受け取る値の型の修正
 
@@ -87,7 +84,7 @@ export default NextAuth({
       // 初回サインイン時にDBにユーザーを登録し、二回目以降はユーザーが存在すればOKにする
       const apolloClient = initializeApollo(null, account.idToken);
 
-      const { errors: socialAuthErrors } = await apolloClient.mutate<
+      const { data, errors: socialAuthErrors } = await apolloClient.mutate<
         SocialAuthMutation,
         SocialAuthMutationVariables
       >({
@@ -97,20 +94,20 @@ export default NextAuth({
         },
       });
 
-      // // Googleの画像URLを更新
-      // const { errors: updateProfileErrors } = await apolloClient.mutate<
-      //   UpdateProfileMutation,
-      //   UpdateProfileMutationVariables
-      // >({
-      //   mutation: UpdateProfileDocument,
-      //   variables: {
-      //     googleImageUrl: user.image,
-      //   },
-      // });
+      // Googleの画像URLを更新
+      const { errors: updateProfileErrors } = await apolloClient.mutate<
+        UpdateProfileMutation,
+        UpdateProfileMutationVariables
+      >({
+        mutation: UpdateProfileDocument,
+        variables: {
+          profileId: data?.socialAuth?.social?.user.relatedUser?.id ?? "",
+          googleImageUrl: user.image,
+        },
+      });
       // エラーが無ければOK
-      // if (socialAuthErrors || updateProfileErrors) {
-      //   console.error(socialAuthErrors || updateProfileErrors);
-      if (socialAuthErrors) {
+      if (socialAuthErrors || updateProfileErrors) {
+        console.error(socialAuthErrors || updateProfileErrors);
         console.error(socialAuthErrors);
         return false;
       } else {

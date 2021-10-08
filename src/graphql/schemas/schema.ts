@@ -1092,6 +1092,10 @@ export type SocialAuthMutation = (
       & { user: (
         { __typename?: 'UserNode' }
         & Pick<UserNode, 'id' | 'email' | 'isActive'>
+        & { relatedUser?: Maybe<(
+          { __typename?: 'ProfileNode' }
+          & Pick<ProfileNode, 'id'>
+        )> }
       ) }
     )> }
   )> }
@@ -1172,6 +1176,9 @@ export const SocialAuthDocument = gql`
         id
         email
         isActive
+        relatedUser {
+          id
+        }
       }
       provider
       uid
