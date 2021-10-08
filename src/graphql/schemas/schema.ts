@@ -144,6 +144,19 @@ export type CreateNotificationMutationPayload = {
   notification?: Maybe<NotificationNode>;
 };
 
+export type CreateProfileMutationInput = {
+  clientMutationId?: Maybe<Scalars['String']>;
+  googleImageUrl: Scalars['String'];
+  profileName: Scalars['String'];
+  relatedUserId: Scalars['ID'];
+};
+
+export type CreateProfileMutationPayload = {
+  __typename?: 'CreateProfileMutationPayload';
+  clientMutationId?: Maybe<Scalars['String']>;
+  profile?: Maybe<ProfileNode>;
+};
+
 export type CreateReportMutationInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   content: Scalars['String'];
@@ -393,6 +406,7 @@ export type Mutation = {
   createLike?: Maybe<CreateLikeMutationPayload>;
   createMemo?: Maybe<CreateMemoMutationPayload>;
   createNotification?: Maybe<CreateNotificationMutationPayload>;
+  createProfile?: Maybe<CreateProfileMutationPayload>;
   createReport?: Maybe<CreateReportMutationPayload>;
   createThread?: Maybe<CreateThreadMutationPayload>;
   deleteComment?: Maybe<DeleteCommentMutationPayload>;
@@ -437,6 +451,11 @@ export type MutationCreateMemoArgs = {
 
 export type MutationCreateNotificationArgs = {
   input: CreateNotificationMutationInput;
+};
+
+
+export type MutationCreateProfileArgs = {
+  input: CreateProfileMutationInput;
 };
 
 
@@ -1054,6 +1073,24 @@ export type UserNodeEdge = {
   node?: Maybe<UserNode>;
 };
 
+export type CreateProfileMutationVariables = Exact<{
+  relatedUserId: Scalars['ID'];
+  profileName: Scalars['String'];
+  googleImageUrl: Scalars['String'];
+}>;
+
+
+export type CreateProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { createProfile?: Maybe<(
+    { __typename?: 'CreateProfileMutationPayload' }
+    & { profile?: Maybe<(
+      { __typename?: 'ProfileNode' }
+      & Pick<ProfileNode, 'id'>
+    )> }
+  )> }
+);
+
 export type UpdateProfileMutationVariables = Exact<{
   profileId: Scalars['ID'];
   profileName?: Maybe<Scalars['String']>;
@@ -1091,7 +1128,7 @@ export type SocialAuthMutation = (
       & Pick<SocialType, 'id' | 'provider' | 'uid' | 'extraData' | 'created' | 'modified'>
       & { user: (
         { __typename?: 'UserNode' }
-        & Pick<UserNode, 'id' | 'email' | 'isActive'>
+        & Pick<UserNode, 'id' | 'email' | 'isActive' | 'firstName' | 'lastName'>
         & { relatedUser?: Maybe<(
           { __typename?: 'ProfileNode' }
           & Pick<ProfileNode, 'id'>
@@ -1161,6 +1198,45 @@ export type CountSecondsSubscription = (
 );
 
 
+export const CreateProfileDocument = gql`
+    mutation CreateProfile($relatedUserId: ID!, $profileName: String!, $googleImageUrl: String!) {
+  createProfile(
+    input: {relatedUserId: $relatedUserId, profileName: $profileName, googleImageUrl: $googleImageUrl}
+  ) {
+    profile {
+      id
+    }
+  }
+}
+    `;
+export type CreateProfileMutationFn = Apollo.MutationFunction<CreateProfileMutation, CreateProfileMutationVariables>;
+
+/**
+ * __useCreateProfileMutation__
+ *
+ * To run a mutation, you first call `useCreateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProfileMutation, { data, loading, error }] = useCreateProfileMutation({
+ *   variables: {
+ *      relatedUserId: // value for 'relatedUserId'
+ *      profileName: // value for 'profileName'
+ *      googleImageUrl: // value for 'googleImageUrl'
+ *   },
+ * });
+ */
+export function useCreateProfileMutation(baseOptions?: Apollo.MutationHookOptions<CreateProfileMutation, CreateProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProfileMutation, CreateProfileMutationVariables>(CreateProfileDocument, options);
+      }
+export type CreateProfileMutationHookResult = ReturnType<typeof useCreateProfileMutation>;
+export type CreateProfileMutationResult = Apollo.MutationResult<CreateProfileMutation>;
+export type CreateProfileMutationOptions = Apollo.BaseMutationOptions<CreateProfileMutation, CreateProfileMutationVariables>;
 export const UpdateProfileDocument = gql`
     mutation UpdateProfile($profileId: ID!, $profileName: String, $selfIntroduction: String, $googleImageUrl: String, $profileImage: Upload, $githubUsername: String, $twitterUsername: String, $websiteUrl: String) {
   updateProfile(
@@ -1214,6 +1290,8 @@ export const SocialAuthDocument = gql`
         id
         email
         isActive
+        firstName
+        lastName
         relatedUser {
           id
         }

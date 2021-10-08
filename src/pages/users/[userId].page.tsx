@@ -57,7 +57,7 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
     <>
       <NextSeo title={PAGE_NAME} />
 
-      <div>{props.user?.username}</div>
+      <div>{props.user?.relatedUser?.profileName ?? props.user?.username}</div>
       <div>{userInfo.userId === props.user?.id && "自分です"}</div>
     </>
   );

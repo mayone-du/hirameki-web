@@ -1,0 +1,13 @@
+mutation CreateProfile($relatedUserId: ID!, $profileName: String!, $googleImageUrl: String!) {
+  createProfile(
+    input: {
+      relatedUserId: $relatedUserId
+      profileName: $profileName
+      googleImageUrl: $googleImageUrl
+    }
+  ) {
+    profile {
+      id
+    }
+  }
+}

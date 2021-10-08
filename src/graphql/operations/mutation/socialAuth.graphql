@@ -6,6 +6,8 @@ mutation SocialAuth($accessToken: String!) {
         id
         email
         isActive
+        firstName
+        lastName
         relatedUser {
           id
         }

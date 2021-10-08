@@ -2,11 +2,14 @@ import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import { initializeApollo } from "src/graphql/apollo/client";
 import type {
+  CreateProfileMutation,
+  CreateProfileMutationVariables,
   SocialAuthMutation,
   SocialAuthMutationVariables,
   UpdateProfileMutation,
   UpdateProfileMutationVariables,
 } from "src/graphql/schemas/schema";
+import { CreateProfileDocument } from "src/graphql/schemas/schema";
 import { SocialAuthDocument, UpdateProfileDocument } from "src/graphql/schemas/schema";
 
 // TODO: 各引数で受け取る値の型の修正
@@ -93,24 +96,52 @@ export default NextAuth({
           accessToken: account.accessToken,
         },
       });
-
-      // プロフィールのGoogleの画像URLを更新
-      const { errors: updateProfileErrors } = await apolloClient.mutate<
-        UpdateProfileMutation,
-        UpdateProfileMutationVariables
-      >({
-        mutation: UpdateProfileDocument,
-        variables: {
-          profileId: data?.socialAuth?.social?.user.relatedUser?.id ?? "",
-          googleImageUrl: user.image,
-        },
-      });
       // エラーが無ければOK
-      if (socialAuthErrors || updateProfileErrors) {
-        console.error(socialAuthErrors || updateProfileErrors);
+      if (socialAuthErrors) {
         console.error(socialAuthErrors);
         return false;
+      }
+
+      // プロフィールIDが存在しなければプロフィールを作成（初回のみ）
+      if (!data?.socialAuth?.social?.user.relatedUser?.id) {
+        const { errors: createProfileErrors } = await apolloClient.mutate<
+          CreateProfileMutation,
+          CreateProfileMutationVariables
+        >({
+          mutation: CreateProfileDocument,
+          variables: {
+            relatedUserId: data?.socialAuth?.social?.user.id ?? "",
+            profileName: `${
+              data?.socialAuth?.social?.user.firstName &&
+              data?.socialAuth?.social?.user.lastName &&
+              data.socialAuth.social.user.lastName + data.socialAuth.social.user.firstName
+            }`,
+            googleImageUrl: user.image ?? "",
+          },
+        });
+
+        if (createProfileErrors) {
+          console.error(createProfileErrors);
+          return false;
+        }
+        return true;
       } else {
+        // 存在すればプロフィールのGoogleの画像URLを更新
+        const { errors: updateProfileErrors } = await apolloClient.mutate<
+          UpdateProfileMutation,
+          UpdateProfileMutationVariables
+        >({
+          mutation: UpdateProfileDocument,
+          variables: {
+            profileId: data?.socialAuth?.social?.user.relatedUser?.id ?? "",
+            googleImageUrl: user.image,
+          },
+        });
+
+        if (updateProfileErrors) {
+          console.error(updateProfileErrors);
+          return false;
+        }
         return true;
       }
     },
