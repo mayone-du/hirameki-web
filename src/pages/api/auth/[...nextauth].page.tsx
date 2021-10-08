@@ -1,8 +1,16 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import { initializeApollo } from "src/graphql/apollo/client";
-import type { SocialAuthMutation, SocialAuthMutationVariables } from "src/graphql/schemas/schema";
-import { SocialAuthDocument } from "src/graphql/schemas/schema";
+import type {
+  SocialAuthMutation,
+  SocialAuthMutationVariables,
+  // UpdateProfileMutation,
+  // UpdateProfileMutationVariables,
+} from "src/graphql/schemas/schema";
+import {
+  SocialAuthDocument,
+  // UpdateProfileDocument
+} from "src/graphql/schemas/schema";
 
 // TODO: 各引数で受け取る値の型の修正
 
@@ -75,22 +83,35 @@ export default NextAuth({
   ],
   callbacks: {
     // サインイン時の処理
-    async signIn(_user, account, _profile) {
+    async signIn(user, account, _profile) {
       // 初回サインイン時にDBにユーザーを登録し、二回目以降はユーザーが存在すればOKにする
       const apolloClient = initializeApollo(null, account.idToken);
 
-      const { errors } = await apolloClient.mutate<SocialAuthMutation, SocialAuthMutationVariables>(
-        {
-          mutation: SocialAuthDocument,
-          variables: {
-            accessToken: account.accessToken,
-          },
+      const { errors: socialAuthErrors } = await apolloClient.mutate<
+        SocialAuthMutation,
+        SocialAuthMutationVariables
+      >({
+        mutation: SocialAuthDocument,
+        variables: {
+          accessToken: account.accessToken,
         },
-      );
+      });
 
-      // SocialAuthのエラーが無ければOK
-      if (errors) {
-        console.error(errors);
+      // // Googleの画像URLを更新
+      // const { errors: updateProfileErrors } = await apolloClient.mutate<
+      //   UpdateProfileMutation,
+      //   UpdateProfileMutationVariables
+      // >({
+      //   mutation: UpdateProfileDocument,
+      //   variables: {
+      //     googleImageUrl: user.image,
+      //   },
+      // });
+      // エラーが無ければOK
+      // if (socialAuthErrors || updateProfileErrors) {
+      //   console.error(socialAuthErrors || updateProfileErrors);
+      if (socialAuthErrors) {
+        console.error(socialAuthErrors);
         return false;
       } else {
         return true;
@@ -121,7 +142,6 @@ export default NextAuth({
       }
 
       // トークンの期限を確認。有効期限内であればトークンをそのまま返却
-      // Return previous token if the access token has not expired yet
       if (Date.now() < token.accessTokenExpires) {
         // console.log("トークンは有効です。");
         return token;
@@ -129,7 +149,6 @@ export default NextAuth({
 
       // console.log("トークンは無効です。");
       // アクセストークンの期限が切れていたら更新してその値を返す
-      // Access token has expired, try to update it
       return refreshAccessToken(token);
     },
 
