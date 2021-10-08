@@ -1,0 +1,16 @@
+query GetAllUsers {
+  allUsers(isSuperuser: false) {
+    edges {
+      node {
+        id
+        email
+        username
+        relatedUser {
+          id
+          profileName
+          selfIntroduction
+        }
+      }
+    }
+  }
+}

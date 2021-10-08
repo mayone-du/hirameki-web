@@ -94,7 +94,7 @@ export default NextAuth({
         },
       });
 
-      // Googleの画像URLを更新
+      // プロフィールのGoogleの画像URLを更新
       const { errors: updateProfileErrors } = await apolloClient.mutate<
         UpdateProfileMutation,
         UpdateProfileMutationVariables
