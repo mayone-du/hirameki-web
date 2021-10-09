@@ -615,9 +615,41 @@ export type ProfileNode = Node & {
 
 export type Query = {
   __typename?: 'Query';
+  allIdeas?: Maybe<IdeaNodeConnection>;
+  allMemos?: Maybe<MemoNodeConnection>;
   allUsers?: Maybe<UserNodeConnection>;
+  idea?: Maybe<IdeaNode>;
+  memo?: Maybe<MemoNode>;
   myUserInfo?: Maybe<UserNode>;
   user?: Maybe<UserNode>;
+};
+
+
+export type QueryAllIdeasArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  content_Icontains?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  ideaCreator?: Maybe<Scalars['ID']>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryAllMemosArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  memoCreator?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
 };
 
 
@@ -633,6 +665,16 @@ export type QueryAllUsersArgs = {
   offset?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   username_Icontains?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryIdeaArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryMemoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -1138,6 +1180,40 @@ export type SocialAuthMutation = (
   )> }
 );
 
+export type GetIndexPageItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetIndexPageItemsQuery = (
+  { __typename?: 'Query' }
+  & { allIdeas?: Maybe<(
+    { __typename?: 'IdeaNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'IdeaNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'IdeaNode' }
+        & Pick<IdeaNode, 'title' | 'content'>
+        & { ideaCreator: (
+          { __typename?: 'UserNode' }
+          & Pick<UserNode, 'id' | 'email'>
+        ) }
+      )> }
+    )>> }
+  )>, allMemos?: Maybe<(
+    { __typename?: 'MemoNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'MemoNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'MemoNode' }
+        & Pick<MemoNode, 'title'>
+        & { memoCreator: (
+          { __typename?: 'UserNode' }
+          & Pick<UserNode, 'id' | 'email'>
+        ) }
+      )> }
+    )>> }
+  )> }
+);
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1331,6 +1407,60 @@ export function useSocialAuthMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SocialAuthMutationHookResult = ReturnType<typeof useSocialAuthMutation>;
 export type SocialAuthMutationResult = Apollo.MutationResult<SocialAuthMutation>;
 export type SocialAuthMutationOptions = Apollo.BaseMutationOptions<SocialAuthMutation, SocialAuthMutationVariables>;
+export const GetIndexPageItemsDocument = gql`
+    query GetIndexPageItems {
+  allIdeas(first: 10) {
+    edges {
+      node {
+        title
+        content
+        ideaCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+  allMemos(first: 10) {
+    edges {
+      node {
+        title
+        memoCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetIndexPageItemsQuery__
+ *
+ * To run a query within a React component, call `useGetIndexPageItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIndexPageItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIndexPageItemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetIndexPageItemsQuery(baseOptions?: Apollo.QueryHookOptions<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>(GetIndexPageItemsDocument, options);
+      }
+export function useGetIndexPageItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>(GetIndexPageItemsDocument, options);
+        }
+export type GetIndexPageItemsQueryHookResult = ReturnType<typeof useGetIndexPageItemsQuery>;
+export type GetIndexPageItemsLazyQueryHookResult = ReturnType<typeof useGetIndexPageItemsLazyQuery>;
+export type GetIndexPageItemsQueryResult = Apollo.QueryResult<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   allUsers(isSuperuser: false) {

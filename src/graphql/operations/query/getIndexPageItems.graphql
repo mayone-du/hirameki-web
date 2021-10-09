@@ -1,0 +1,25 @@
+query GetIndexPageItems {
+  allIdeas(first: 10) {
+    edges {
+      node {
+        title
+        content
+        ideaCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+  allMemos(first: 10) {
+    edges {
+      node {
+        title
+        memoCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+}

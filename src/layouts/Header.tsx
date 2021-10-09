@@ -32,7 +32,7 @@ export const Header: React.VFC = memo(() => {
       <nav className="flex justify-between items-center">
         <div>
           <Link href="/">
-            <a className="block text-lg font-bold">LOGO</a>
+            <a className="block text-lg font-bold">Hirameki</a>
           </Link>
         </div>
         <ul className="flex items-center">
@@ -76,10 +76,12 @@ export const Header: React.VFC = memo(() => {
                             <li>
                               {/* ↓押した時にメニューを閉じたいためボタンにする */}
                               <Popover.Button className="block w-full text-left">
-                                <Link href={`/users/${userInfo.userId}`}>
+                                <Link href={`/${userInfo.userId}`}>
                                   <a className="block py-2 px-4 hover:bg-gray-200 transition-colors duration-300">
-                                    profile <br />
-                                    @hoge
+                                    <span className="block">sample username</span>
+                                    <span className="block text-xs text-gray-400">
+                                      @{userInfo.userId}
+                                    </span>
                                   </a>
                                 </Link>
                               </Popover.Button>

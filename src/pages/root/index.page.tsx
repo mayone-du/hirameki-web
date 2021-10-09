@@ -1,15 +1,27 @@
 import { useReactiveVar } from "@apollo/client";
-import type { CustomNextPage } from "next";
-import { signOut } from "next-auth/client";
+import type { CustomNextPage, GetStaticProps } from "next";
+// import { signOut } from "next-auth/client";
 import { BreadcrumbJsonLd, NextSeo } from "next-seo";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { NotAuth } from "src/components/NotAuth";
 import { UserLoading } from "src/components/UserLoading";
 import { userInfoVar } from "src/graphql/apollo/cache";
+import { initializeApollo } from "src/graphql/apollo/client";
+import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
+import { GetIndexPageItemsDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
 
-const IndexPage: CustomNextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  const apolloClient = initializeApollo(null, "");
+  const { data } = await apolloClient.query<GetIndexPageItemsQuery>({
+    query: GetIndexPageItemsDocument,
+  });
+
+  return { props: data };
+};
+
+const IndexPage: CustomNextPage<GetIndexPageItemsQuery | undefined> = (props) => {
   const PAGE_NAME = "トップページ";
 
   const userInfo = useReactiveVar(userInfoVar);
@@ -42,12 +54,33 @@ const IndexPage: CustomNextPage = () => {
           <button className="block p-4 mx-auto rounded-md border" onClick={handleClick}>
             ボタン
           </button>
+          <div>
+            <h2 className="py-4 text-2xl font-bold text-center">Idea</h2>
+            <ul>
+              {props.allIdeas?.edges.map((idea, index) => {
+                return (
+                  <li key={index.toString()}>
+                    {idea?.node?.title}
+                    {idea?.node?.content}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div>
+            <h2 className="py-4 text-2xl font-bold text-center">Memo</h2>
+            <ul>
+              {props.allMemos?.edges.map((memo, index) => {
+                return <li key={index.toString()}>{memo?.node?.title}</li>;
+              })}
+            </ul>
+          </div>
         </div>
       )}
 
-      <button className="block p-2 mx-auto bg-red-200 rounded-lg" onClick={signOut}>
+      {/* <button className="block p-2 mx-auto bg-red-200 rounded-lg" onClick={signOut}>
         sign out
-      </button>
+      </button> */}
     </>
   );
 };
