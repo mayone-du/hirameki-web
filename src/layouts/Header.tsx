@@ -18,8 +18,8 @@ export const Header: React.VFC = memo(() => {
 
   const menu_items = [
     {
-      label: "sample",
-      href: "##",
+      label: "Settings",
+      href: "/settings",
     },
     {
       label: "Reports",

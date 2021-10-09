@@ -11,6 +11,8 @@ import { initializeApollo } from "src/graphql/apollo/client";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
 import { GetIndexPageItemsDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
+import { IdeaList } from "src/pages/root/components/IdeaList";
+import { MemoList } from "src/pages/root/components/MemoList";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo(null, "");
@@ -56,24 +58,11 @@ const IndexPage: CustomNextPage<GetIndexPageItemsQuery | undefined> = (props) =>
           </button>
           <div>
             <h2 className="py-4 text-2xl font-bold text-center">Idea</h2>
-            <ul>
-              {props.allIdeas?.edges.map((idea, index) => {
-                return (
-                  <li key={index.toString()}>
-                    {idea?.node?.title}
-                    {idea?.node?.content}
-                  </li>
-                );
-              })}
-            </ul>
+            <IdeaList {...props} />
           </div>
           <div>
             <h2 className="py-4 text-2xl font-bold text-center">Memo</h2>
-            <ul>
-              {props.allMemos?.edges.map((memo, index) => {
-                return <li key={index.toString()}>{memo?.node?.title}</li>;
-              })}
-            </ul>
+            <MemoList {...props} />
           </div>
         </div>
       )}
