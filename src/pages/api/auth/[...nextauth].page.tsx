@@ -87,6 +87,7 @@ export default NextAuth({
       // 初回サインイン時にDBにユーザーを登録し、二回目以降はユーザーが存在すればOKにする
       const apolloClient = initializeApollo(null, account.idToken);
 
+      // 初回であればユーザー作成と認証をし、2回目以降はトークンの更新と認証をする
       const { data, errors: socialAuthErrors } = await apolloClient.mutate<
         SocialAuthMutation,
         SocialAuthMutationVariables

@@ -1,5 +1,5 @@
 query GetAllUsers {
-  allUsers(isSuperuser: false) {
+  allUsers(isSuperuser: false, isActive: true) {
     edges {
       node {
         id

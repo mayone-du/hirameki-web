@@ -1,6 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticProps } from "next";
-// import { signOut } from "next-auth/client";
+import { signOut } from "next-auth/client";
 import { BreadcrumbJsonLd, NextSeo } from "next-seo";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
@@ -67,9 +67,9 @@ const IndexPage: CustomNextPage<GetIndexPageItemsQuery | undefined> = (props) =>
         </div>
       )}
 
-      {/* <button className="block p-2 mx-auto bg-red-200 rounded-lg" onClick={signOut}>
+      <button className="block p-2 mx-auto bg-red-200 rounded-lg" onClick={signOut}>
         sign out
-      </button> */}
+      </button>
     </>
   );
 };

@@ -659,6 +659,7 @@ export type QueryAllUsersArgs = {
   email?: Maybe<Scalars['String']>;
   email_Icontains?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   isStaff?: Maybe<Scalars['Boolean']>;
   isSuperuser?: Maybe<Scalars['Boolean']>;
   last?: Maybe<Scalars['Int']>;
@@ -1463,7 +1464,7 @@ export type GetIndexPageItemsLazyQueryHookResult = ReturnType<typeof useGetIndex
 export type GetIndexPageItemsQueryResult = Apollo.QueryResult<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
-  allUsers(isSuperuser: false) {
+  allUsers(isSuperuser: false, isActive: true) {
     edges {
       node {
         id

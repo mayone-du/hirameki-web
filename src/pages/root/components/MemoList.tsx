@@ -2,8 +2,6 @@ import Link from "next/link";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
 
 export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) => {
-  console.log(props);
-
   return (
     <div>
       {props?.allMemos?.edges.length === 0 ? (
