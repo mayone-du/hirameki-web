@@ -11,7 +11,7 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
           {props?.allIdeas?.edges.map((idea, index) => {
             return (
               <li className="p-2 lg:p-4" key={index.toString()}>
-                <Link href="/">
+                <Link href={`/ideas/${idea?.node?.id}`}>
                   <a className="block p-2 min-h-full bg-blue-100 rounded-md shadow">
                     {idea?.node?.title}
                     <br />

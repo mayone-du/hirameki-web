@@ -1192,7 +1192,7 @@ export type GetIndexPageItemsQuery = (
       { __typename?: 'IdeaNodeEdge' }
       & { node?: Maybe<(
         { __typename?: 'IdeaNode' }
-        & Pick<IdeaNode, 'title' | 'content'>
+        & Pick<IdeaNode, 'id' | 'title' | 'content'>
         & { ideaCreator: (
           { __typename?: 'UserNode' }
           & Pick<UserNode, 'id' | 'email'>
@@ -1205,13 +1205,47 @@ export type GetIndexPageItemsQuery = (
       { __typename?: 'MemoNodeEdge' }
       & { node?: Maybe<(
         { __typename?: 'MemoNode' }
-        & Pick<MemoNode, 'title'>
+        & Pick<MemoNode, 'id' | 'title'>
         & { memoCreator: (
           { __typename?: 'UserNode' }
           & Pick<UserNode, 'id' | 'email'>
         ) }
       )> }
     )>> }
+  )> }
+);
+
+export type GetAllIdeasQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllIdeasQuery = (
+  { __typename?: 'Query' }
+  & { allIdeas?: Maybe<(
+    { __typename?: 'IdeaNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'IdeaNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'IdeaNode' }
+        & Pick<IdeaNode, 'id' | 'title' | 'content'>
+        & { ideaCreator: (
+          { __typename?: 'UserNode' }
+          & Pick<UserNode, 'id' | 'email'>
+        ) }
+      )> }
+    )>> }
+  )> }
+);
+
+export type GetIdeaQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetIdeaQuery = (
+  { __typename?: 'Query' }
+  & { idea?: Maybe<(
+    { __typename?: 'IdeaNode' }
+    & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt'>
   )> }
 );
 
@@ -1413,6 +1447,7 @@ export const GetIndexPageItemsDocument = gql`
   allIdeas(first: 10) {
     edges {
       node {
+        id
         title
         content
         ideaCreator {
@@ -1425,6 +1460,7 @@ export const GetIndexPageItemsDocument = gql`
   allMemos(first: 10) {
     edges {
       node {
+        id
         title
         memoCreator {
           id
@@ -1462,6 +1498,88 @@ export function useGetIndexPageItemsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetIndexPageItemsQueryHookResult = ReturnType<typeof useGetIndexPageItemsQuery>;
 export type GetIndexPageItemsLazyQueryHookResult = ReturnType<typeof useGetIndexPageItemsLazyQuery>;
 export type GetIndexPageItemsQueryResult = Apollo.QueryResult<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>;
+export const GetAllIdeasDocument = gql`
+    query GetAllIdeas {
+  allIdeas(isPublished: true) {
+    edges {
+      node {
+        id
+        title
+        content
+        ideaCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllIdeasQuery__
+ *
+ * To run a query within a React component, call `useGetAllIdeasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllIdeasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllIdeasQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllIdeasQuery(baseOptions?: Apollo.QueryHookOptions<GetAllIdeasQuery, GetAllIdeasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllIdeasQuery, GetAllIdeasQueryVariables>(GetAllIdeasDocument, options);
+      }
+export function useGetAllIdeasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllIdeasQuery, GetAllIdeasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllIdeasQuery, GetAllIdeasQueryVariables>(GetAllIdeasDocument, options);
+        }
+export type GetAllIdeasQueryHookResult = ReturnType<typeof useGetAllIdeasQuery>;
+export type GetAllIdeasLazyQueryHookResult = ReturnType<typeof useGetAllIdeasLazyQuery>;
+export type GetAllIdeasQueryResult = Apollo.QueryResult<GetAllIdeasQuery, GetAllIdeasQueryVariables>;
+export const GetIdeaDocument = gql`
+    query GetIdea($id: ID!) {
+  idea(id: $id) {
+    id
+    title
+    content
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetIdeaQuery__
+ *
+ * To run a query within a React component, call `useGetIdeaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdeaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIdeaQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetIdeaQuery(baseOptions: Apollo.QueryHookOptions<GetIdeaQuery, GetIdeaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIdeaQuery, GetIdeaQueryVariables>(GetIdeaDocument, options);
+      }
+export function useGetIdeaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdeaQuery, GetIdeaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIdeaQuery, GetIdeaQueryVariables>(GetIdeaDocument, options);
+        }
+export type GetIdeaQueryHookResult = ReturnType<typeof useGetIdeaQuery>;
+export type GetIdeaLazyQueryHookResult = ReturnType<typeof useGetIdeaLazyQuery>;
+export type GetIdeaQueryResult = Apollo.QueryResult<GetIdeaQuery, GetIdeaQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   allUsers(isSuperuser: false, isActive: true) {

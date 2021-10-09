@@ -2,6 +2,7 @@ query GetIndexPageItems {
   allIdeas(first: 10) {
     edges {
       node {
+        id
         title
         content
         ideaCreator {
@@ -14,6 +15,7 @@ query GetIndexPageItems {
   allMemos(first: 10) {
     edges {
       node {
+        id
         title
         memoCreator {
           id

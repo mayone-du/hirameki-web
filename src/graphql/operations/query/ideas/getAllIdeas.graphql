@@ -1,0 +1,15 @@
+query GetAllIdeas {
+  allIdeas(isPublished: true) {
+    edges {
+      node {
+        id
+        title
+        content
+        ideaCreator {
+          id
+          email
+        }
+      }
+    }
+  }
+}
