@@ -40,6 +40,8 @@ export const Layout = (page: NextPage) => {
             isLoading: false,
             isLogin: true,
             userId: data.myUserInfo?.id ?? "",
+            profileName: data.myUserInfo?.relatedUser?.profileName ?? "",
+            profileImage: data.myUserInfo?.relatedUser?.profileImage ?? "",
           });
           return;
         }
@@ -49,6 +51,8 @@ export const Layout = (page: NextPage) => {
           userId: "",
           isLoading: false,
           isLogin: false,
+          profileName: "",
+          profileImage: "",
         });
       })();
     }

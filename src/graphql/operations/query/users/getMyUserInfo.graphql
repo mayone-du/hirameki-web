@@ -2,6 +2,9 @@ query GetMyUserInfo {
   myUserInfo {
     id
     email
-    username
+    relatedUser {
+      profileName
+      profileImage
+    }
   }
 }

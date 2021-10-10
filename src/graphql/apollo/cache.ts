@@ -10,6 +10,8 @@ const InitialUserInfo = {
   isLogin: false,
   isLoading: true,
   userId: "",
+  profileName: "",
+  profileImage: "",
 };
 export const userInfoVar = makeVar(InitialUserInfo);
 
