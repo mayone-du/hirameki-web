@@ -7,7 +7,17 @@ query GetIndexPageItems {
         content
         ideaCreator {
           id
-          email
+          relatedUser {
+            profileName
+            profileImage
+          }
+        }
+        likedIdea {
+          edges {
+            node {
+              id
+            }
+          }
         }
       }
     }
@@ -19,7 +29,17 @@ query GetIndexPageItems {
         title
         memoCreator {
           id
-          email
+          relatedUser {
+            profileName
+            profileImage
+          }
+        }
+        likedMemo {
+          edges {
+            node {
+              id
+            }
+          }
         }
       }
     }

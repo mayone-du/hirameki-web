@@ -14,6 +14,7 @@ export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                 <Link href="/">
                   <a className="block p-2 min-h-full bg-blue-50 rounded shadow">
                     {memo?.node?.title}
+                    いいねの数:{memo?.node?.likedMemo.edges.length.toString()}
                   </a>
                 </Link>
               </li>

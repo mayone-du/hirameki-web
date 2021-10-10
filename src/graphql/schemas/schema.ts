@@ -26,6 +26,33 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AnnounceNode = Node & {
+  __typename?: 'AnnounceNode';
+  content: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  /** The ID of the object. */
+  id: Scalars['ID'];
+  isImportant: Scalars['Boolean'];
+  title: Scalars['String'];
+};
+
+export type AnnounceNodeConnection = {
+  __typename?: 'AnnounceNodeConnection';
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<AnnounceNodeEdge>>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+};
+
+/** A Relay edge containing a `AnnounceNode` and its cursor. */
+export type AnnounceNodeEdge = {
+  __typename?: 'AnnounceNodeEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge */
+  node?: Maybe<AnnounceNode>;
+};
+
 export type CommentNode = Node & {
   __typename?: 'CommentNode';
   commentor: UserNode;
@@ -615,13 +642,29 @@ export type ProfileNode = Node & {
 
 export type Query = {
   __typename?: 'Query';
+  allAnnounce?: Maybe<AnnounceNodeConnection>;
   allIdeas?: Maybe<IdeaNodeConnection>;
   allMemos?: Maybe<MemoNodeConnection>;
+  allMyNotifications?: Maybe<NotificationNodeConnection>;
   allUsers?: Maybe<UserNodeConnection>;
   idea?: Maybe<IdeaNode>;
   memo?: Maybe<MemoNode>;
   myUserInfo?: Maybe<UserNode>;
   user?: Maybe<UserNode>;
+};
+
+
+export type QueryAllAnnounceArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  content_Icontains?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isImportant?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
 };
 
 
@@ -650,6 +693,19 @@ export type QueryAllMemosArgs = {
   offset?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   title_Icontains?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryAllMyNotificationsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isChecked?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  notificationReciever?: Maybe<Scalars['ID']>;
+  notificationType?: Maybe<Scalars['String']>;
+  notificator?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 
@@ -1195,7 +1251,20 @@ export type GetIndexPageItemsQuery = (
         & Pick<IdeaNode, 'id' | 'title' | 'content'>
         & { ideaCreator: (
           { __typename?: 'UserNode' }
-          & Pick<UserNode, 'id' | 'email'>
+          & Pick<UserNode, 'id'>
+          & { relatedUser?: Maybe<(
+            { __typename?: 'ProfileNode' }
+            & Pick<ProfileNode, 'profileName' | 'profileImage'>
+          )> }
+        ), likedIdea: (
+          { __typename?: 'LikeNodeConnection' }
+          & { edges: Array<Maybe<(
+            { __typename?: 'LikeNodeEdge' }
+            & { node?: Maybe<(
+              { __typename?: 'LikeNode' }
+              & Pick<LikeNode, 'id'>
+            )> }
+          )>> }
         ) }
       )> }
     )>> }
@@ -1208,7 +1277,20 @@ export type GetIndexPageItemsQuery = (
         & Pick<MemoNode, 'id' | 'title'>
         & { memoCreator: (
           { __typename?: 'UserNode' }
-          & Pick<UserNode, 'id' | 'email'>
+          & Pick<UserNode, 'id'>
+          & { relatedUser?: Maybe<(
+            { __typename?: 'ProfileNode' }
+            & Pick<ProfileNode, 'profileName' | 'profileImage'>
+          )> }
+        ), likedMemo: (
+          { __typename?: 'LikeNodeConnection' }
+          & { edges: Array<Maybe<(
+            { __typename?: 'LikeNodeEdge' }
+            & { node?: Maybe<(
+              { __typename?: 'LikeNode' }
+              & Pick<LikeNode, 'id'>
+            )> }
+          )>> }
         ) }
       )> }
     )>> }
@@ -1456,7 +1538,17 @@ export const GetIndexPageItemsDocument = gql`
         content
         ideaCreator {
           id
-          email
+          relatedUser {
+            profileName
+            profileImage
+          }
+        }
+        likedIdea {
+          edges {
+            node {
+              id
+            }
+          }
         }
       }
     }
@@ -1468,7 +1560,17 @@ export const GetIndexPageItemsDocument = gql`
         title
         memoCreator {
           id
-          email
+          relatedUser {
+            profileName
+            profileImage
+          }
+        }
+        likedMemo {
+          edges {
+            node {
+              id
+            }
+          }
         }
       }
     }

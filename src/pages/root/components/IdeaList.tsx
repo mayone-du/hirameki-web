@@ -16,6 +16,8 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                     {idea?.node?.title}
                     <br />
                     {idea?.node?.content}
+                    <br />
+                    いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
                   </a>
                 </Link>
               </li>
