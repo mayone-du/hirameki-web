@@ -5,7 +5,7 @@ import { signOut, useSession } from "next-auth/client";
 import { memo, useCallback } from "react";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { useAuthModal } from "src/libs/hooks/useAuthModal";
-import { HEADER_MENUS } from "src/utils/menus/HEADER_MENUS";
+import { HEADER_MENUS } from "src/utils/menus";
 
 export const Header: React.VFC = memo(() => {
   const [session] = useSession();
@@ -72,7 +72,7 @@ export const Header: React.VFC = memo(() => {
                       return (
                         <div>
                           <Popover.Button
-                            className={`overflow-hidden rounded-full h-10 px-4 border font-bold bg-blue-300 text-white block hover:shadow-lg hover:bg-blue-400 ${
+                            className={`overflow-hidden rounded-full h-10 px-4 border font-bold bg-blue-400 text-white block hover:shadow-lg hover:bg-blue-500 ${
                               isOpen && "bg-blue-400"
                             }`}
                           >

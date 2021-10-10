@@ -1376,11 +1376,52 @@ export type GetUserQuery = (
   { __typename?: 'Query' }
   & { user?: Maybe<(
     { __typename?: 'UserNode' }
-    & Pick<UserNode, 'id' | 'username' | 'email' | 'firstName' | 'lastName'>
+    & Pick<UserNode, 'id' | 'username'>
     & { relatedUser?: Maybe<(
       { __typename?: 'ProfileNode' }
-      & Pick<ProfileNode, 'id' | 'profileName' | 'googleImageUrl' | 'selfIntroduction' | 'githubUsername' | 'twitterUsername' | 'websiteUrl'>
-    )> }
+      & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl' | 'selfIntroduction' | 'githubUsername' | 'twitterUsername' | 'websiteUrl'>
+    )>, followingUser: (
+      { __typename?: 'FollowNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'FollowNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'FollowNode' }
+          & { followedUser: (
+            { __typename?: 'UserNode' }
+            & Pick<UserNode, 'id'>
+            & { relatedUser?: Maybe<(
+              { __typename?: 'ProfileNode' }
+              & Pick<ProfileNode, 'profileName'>
+            )> }
+          ) }
+        )> }
+      )>> }
+    ), followedUser: (
+      { __typename?: 'FollowNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'FollowNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'FollowNode' }
+          & { followingUser: (
+            { __typename?: 'UserNode' }
+            & Pick<UserNode, 'id'>
+            & { relatedUser?: Maybe<(
+              { __typename?: 'ProfileNode' }
+              & Pick<ProfileNode, 'profileName'>
+            )> }
+          ) }
+        )> }
+      )>> }
+    ), ideaCreator: (
+      { __typename?: 'IdeaNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'IdeaNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'IdeaNode' }
+          & Pick<IdeaNode, 'id'>
+        )> }
+      )>> }
+    ) }
   )> }
 );
 
@@ -1775,17 +1816,46 @@ export const GetUserDocument = gql`
   user(id: $id) {
     id
     username
-    email
-    firstName
-    lastName
     relatedUser {
       id
       profileName
+      profileImage
       googleImageUrl
       selfIntroduction
       githubUsername
       twitterUsername
       websiteUrl
+    }
+    followingUser {
+      edges {
+        node {
+          followedUser {
+            id
+            relatedUser {
+              profileName
+            }
+          }
+        }
+      }
+    }
+    followedUser {
+      edges {
+        node {
+          followingUser {
+            id
+            relatedUser {
+              profileName
+            }
+          }
+        }
+      }
+    }
+    ideaCreator(isPublished: true) {
+      edges {
+        node {
+          id
+        }
+      }
     }
   }
 }

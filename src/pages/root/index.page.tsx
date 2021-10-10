@@ -11,8 +11,7 @@ import { initializeApollo } from "src/graphql/apollo/client";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
 import { GetIndexPageItemsDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
-import { IdeaList } from "src/pages/root/components/IdeaList";
-import { MemoList } from "src/pages/root/components/MemoList";
+import { IdeaList, MemoList } from "src/pages/root/components";
 
 export const getStaticProps: GetStaticProps = async () => {
   const apolloClient = initializeApollo(null, "");

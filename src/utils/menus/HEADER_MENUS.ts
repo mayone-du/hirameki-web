@@ -4,6 +4,10 @@ export const HEADER_MENUS = [
     label: "HOME",
   },
   {
+    href: "/users",
+    label: "users",
+  },
+  {
     href: "/404",
     label: "404",
   },
