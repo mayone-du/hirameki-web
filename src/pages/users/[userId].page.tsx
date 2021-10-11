@@ -2,6 +2,7 @@ import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { AiOutlineGithub, AiOutlineLink, AiOutlineTwitter } from "react-icons/ai";
+import { Tooltip } from "src/components/Tooltip";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { initializeApollo } from "src/graphql/apollo/client";
 import type {
@@ -101,14 +102,17 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
               {/* TwitterやGitHubなどのリンク */}
               <div className="flex items-center">
                 {props.user?.relatedUser?.githubUsername && (
-                  <a
-                    href={`https://github.com/${props.user.relatedUser.githubUsername}`}
-                    target="_blank"
-                    className="block mx-1"
-                    rel="noreferrer"
-                  >
-                    <AiOutlineGithub className="block w-6 h-6 text-gray-500" />
-                  </a>
+                  <Tooltip tooltipText={`@${props.user.relatedUser.githubUsername}`}>
+                    <a
+                      href={`https://github.com/${props.user.relatedUser.githubUsername}`}
+                      target="_blank"
+                      className="block mx-1"
+                      rel="noreferrer"
+                      data-tip={`@${props.user.relatedUser.githubUsername}`}
+                    >
+                      <AiOutlineGithub className="block w-6 h-6 text-gray-500" />
+                    </a>
+                  </Tooltip>
                 )}
                 {props.user?.relatedUser?.twitterUsername && (
                   <a
@@ -116,6 +120,7 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
                     target="_blank"
                     className="block mx-1"
                     rel="noreferrer"
+                    data-tip={`@${props.user.relatedUser.twitterUsername}`}
                   >
                     <AiOutlineTwitter className="block w-6 h-6 text-gray-500" />
                   </a>
@@ -126,6 +131,7 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
                     target="_blank"
                     className="block mx-1"
                     rel="noreferrer"
+                    data-tip={`${props.user.relatedUser.websiteUrl}`}
                   >
                     <AiOutlineLink className="block w-6 h-6 text-gray-500" />
                   </a>
