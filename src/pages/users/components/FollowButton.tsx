@@ -77,6 +77,14 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
   }, [followingState]);
 
   useEffect(() => {
+    // ログインしていない場合はstateの初期値を更新するだけ
+    if (!userInfo.isLoading && !userInfo.isLogin) {
+      return setFollowingState({
+        followId: "",
+        isAlready: false,
+        isFollowing: false,
+      });
+    }
     // ログイン済みであればクエリを実行
     if (!userInfo.isLoading && userInfo.isLogin) {
       query();
@@ -109,7 +117,7 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
 
   return (
     <button
-      className={`block p-2 rounded-xl shadow-sm hover:shadow ${
+      className={`block py-1 px-2 rounded shadow-sm border hover:shadow ${
         followingState.isFollowing ? "bg-blue-200" : "bg-red-200"
       }`}
       onClick={handleClick}

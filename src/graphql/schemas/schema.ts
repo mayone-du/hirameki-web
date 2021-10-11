@@ -281,6 +281,7 @@ export type IdeaNode = Node & {
   targetIdea: ThreadNodeConnection;
   title: Scalars['String'];
   topics: TopicNodeConnection;
+  updatedAt: Scalars['DateTime'];
 };
 
 
@@ -1485,7 +1486,26 @@ export type GetUserQuery = (
         { __typename?: 'IdeaNodeEdge' }
         & { node?: Maybe<(
           { __typename?: 'IdeaNode' }
-          & Pick<IdeaNode, 'id'>
+          & Pick<IdeaNode, 'id' | 'title' | 'createdAt' | 'updatedAt'>
+          & { topics: (
+            { __typename?: 'TopicNodeConnection' }
+            & { edges: Array<Maybe<(
+              { __typename?: 'TopicNodeEdge' }
+              & { node?: Maybe<(
+                { __typename?: 'TopicNode' }
+                & Pick<TopicNode, 'id' | 'name'>
+              )> }
+            )>> }
+          ), likedIdea: (
+            { __typename?: 'LikeNodeConnection' }
+            & { edges: Array<Maybe<(
+              { __typename?: 'LikeNodeEdge' }
+              & { node?: Maybe<(
+                { __typename?: 'LikeNode' }
+                & Pick<LikeNode, 'id'>
+              )> }
+            )>> }
+          ) }
         )> }
       )>> }
     ) }
@@ -2022,6 +2042,24 @@ export const GetUserDocument = gql`
       edges {
         node {
           id
+          title
+          topics {
+            edges {
+              node {
+                id
+                name
+              }
+            }
+          }
+          createdAt
+          updatedAt
+          likedIdea {
+            edges {
+              node {
+                id
+              }
+            }
+          }
         }
       }
     }

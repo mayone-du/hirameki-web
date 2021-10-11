@@ -40,6 +40,24 @@ query GetUser($id: ID!) {
       edges {
         node {
           id
+          title
+          topics {
+            edges {
+              node {
+                id
+                name
+              }
+            }
+          }
+          createdAt
+          updatedAt
+          likedIdea {
+            edges {
+              node {
+                id
+              }
+            }
+          }
         }
       }
     }

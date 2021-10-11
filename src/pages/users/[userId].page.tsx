@@ -1,6 +1,7 @@
 import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
+import { AiOutlineGithub, AiOutlineLink, AiOutlineTwitter } from "react-icons/ai";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { initializeApollo } from "src/graphql/apollo/client";
 import type {
@@ -59,7 +60,7 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
 
       <div>
         <section>
-          <div className="flex">
+          <div className="md:flex py-4 md:py-8 px-8 md:px-16">
             <img
               src={
                 // プロフィール画像を設定していなければGoogleアカウントの画像を表示
@@ -68,9 +69,9 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
                   : props.user?.relatedUser?.googleImageUrl ?? ""
               }
               alt="Profile Icon"
-              className="block object-cover overflow-hidden w-32 h-32 rounded-full"
+              className="block object-cover overflow-hidden mr-8 w-32 h-32 rounded-full"
             />
-            <div>
+            <div className="flex-grow">
               <div className="flex justify-between items-center">
                 <h1 className="text-xl font-bold">{props.user?.relatedUser?.profileName}</h1>
                 {/* 自分のプロフィール化によってボタンを出し分け */}
@@ -81,20 +82,54 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
               </div>
               <p>{props.user?.relatedUser?.selfIntroduction || "自己紹介はありません"}</p>
 
-              {/* その他の情報 */}
-              <div>
-                <p>
+              {/* フォロワーやいいね、アイデアの数など */}
+              <div className="flex items-center">
+                <p className="pr-4">
                   <span className="text-lg font-bold">
                     {props.user?.followedUser.edges.length.toString()}
                   </span>{" "}
                   Followers
                 </p>
-                <p>
+                <p className="pr-4">
                   <span className="text-lg font-bold">
                     {props.user?.ideaCreator.edges.length.toString()}
                   </span>{" "}
                   Ideas
                 </p>
+              </div>
+
+              {/* TwitterやGitHubなどのリンク */}
+              <div className="flex items-center">
+                {props.user?.relatedUser?.githubUsername && (
+                  <a
+                    href={`https://github.com/${props.user.relatedUser.githubUsername}`}
+                    target="_blank"
+                    className="block mx-1"
+                    rel="noreferrer"
+                  >
+                    <AiOutlineGithub className="block w-6 h-6 text-gray-500" />
+                  </a>
+                )}
+                {props.user?.relatedUser?.twitterUsername && (
+                  <a
+                    href={`https://twitter.com/${props.user.relatedUser.twitterUsername}`}
+                    target="_blank"
+                    className="block mx-1"
+                    rel="noreferrer"
+                  >
+                    <AiOutlineTwitter className="block w-6 h-6 text-gray-500" />
+                  </a>
+                )}
+                {props.user?.relatedUser?.websiteUrl && (
+                  <a
+                    href={props.user.relatedUser.websiteUrl}
+                    target="_blank"
+                    className="block mx-1"
+                    rel="noreferrer"
+                  >
+                    <AiOutlineLink className="block w-6 h-6 text-gray-500" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -119,6 +154,20 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
             return (
               <div key={index.toString()}>
                 {follow?.node?.followedUser.relatedUser?.profileName}
+              </div>
+            );
+          })}
+        </div>
+
+        <div>
+          アイデア
+          <br />
+          {props.user?.ideaCreator.edges.map((idea, index) => {
+            return (
+              <div className="m-2 bg-green-200" key={index.toString()}>
+                {idea?.node?.title}
+                <br />
+                いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
               </div>
             );
           })}
