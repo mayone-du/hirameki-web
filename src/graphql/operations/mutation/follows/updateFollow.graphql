@@ -1,0 +1,7 @@
+mutation UpdateFollow($followId: ID!, $isFollowing: Boolean!) {
+  updateFollow(input: { followId: $followId, isFollowing: $isFollowing }) {
+    follow {
+      id
+    }
+  }
+}

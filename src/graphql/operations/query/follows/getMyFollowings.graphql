@@ -1,0 +1,13 @@
+query GetMyFollowings {
+  myFollowings {
+    edges {
+      node {
+        id
+        isFollowing
+        followedUser {
+          id
+        }
+      }
+    }
+  }
+}

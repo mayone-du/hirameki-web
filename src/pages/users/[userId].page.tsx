@@ -46,6 +46,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return { props: data, revalidate: 5 /* 5sec */ };
 };
 
+// ユーザーの詳細ページ
 const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
   const PAGE_NAME =
     (props.user?.relatedUser?.profileName || props.user?.username) + "のプロフィール";
@@ -74,7 +75,9 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
                 <h1 className="text-xl font-bold">{props.user?.relatedUser?.profileName}</h1>
                 {/* 自分のプロフィール化によってボタンを出し分け */}
                 {!userInfo.isLoading && userInfo.userId === props.user?.id && <EditProfileButton />}
-                {!userInfo.isLoading && userInfo.userId !== props.user?.id && <FollowButton />}
+                {!userInfo.isLoading && userInfo.userId !== props.user?.id && (
+                  <FollowButton pageUserId={props.user?.id ?? ""} />
+                )}
               </div>
               <p>{props.user?.relatedUser?.selfIntroduction || "自己紹介はありません"}</p>
 

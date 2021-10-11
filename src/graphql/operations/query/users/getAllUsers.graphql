@@ -3,7 +3,6 @@ query GetAllUsers {
     edges {
       node {
         id
-        email
         username
         relatedUser {
           id

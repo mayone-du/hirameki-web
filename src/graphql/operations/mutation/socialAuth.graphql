@@ -4,19 +4,10 @@ mutation SocialAuth($accessToken: String!) {
       id
       user {
         id
-        email
-        isActive
-        firstName
-        lastName
         relatedUser {
           id
         }
       }
-      provider
-      uid
-      extraData
-      created
-      modified
     }
   }
 }

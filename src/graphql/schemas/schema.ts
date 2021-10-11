@@ -441,8 +441,8 @@ export type Mutation = {
   deleteMemo?: Maybe<DeleteMemoMutationPayload>;
   /** Social Auth Mutation */
   socialAuth?: Maybe<SocialAuth>;
-  udpateFollow?: Maybe<UpdateFollowMutationPayload>;
   updateComment?: Maybe<UpdateCommentMutationPayload>;
+  updateFollow?: Maybe<UpdateFollowMutationPayload>;
   updateIdea?: Maybe<UpdateIdeaMutationPayload>;
   updateLike?: Maybe<UpdateLikeMutationPayload>;
   updateMemo?: Maybe<UpdateMemoMutationPayload>;
@@ -517,13 +517,13 @@ export type MutationSocialAuthArgs = {
 };
 
 
-export type MutationUdpateFollowArgs = {
-  input: UpdateFollowMutationInput;
+export type MutationUpdateCommentArgs = {
+  input: UpdateCommentMutationInput;
 };
 
 
-export type MutationUpdateCommentArgs = {
-  input: UpdateCommentMutationInput;
+export type MutationUpdateFollowArgs = {
+  input: UpdateFollowMutationInput;
 };
 
 
@@ -649,6 +649,7 @@ export type Query = {
   allUsers?: Maybe<UserNodeConnection>;
   idea?: Maybe<IdeaNode>;
   memo?: Maybe<MemoNode>;
+  myFollowings?: Maybe<FollowNodeConnection>;
   myUserInfo?: Maybe<UserNode>;
   user?: Maybe<UserNode>;
 };
@@ -732,6 +733,18 @@ export type QueryIdeaArgs = {
 
 export type QueryMemoArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryMyFollowingsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  followedUser?: Maybe<Scalars['ID']>;
+  followingUser?: Maybe<Scalars['ID']>;
+  isFollowing?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 
@@ -1172,6 +1185,39 @@ export type UserNodeEdge = {
   node?: Maybe<UserNode>;
 };
 
+export type CreateFollowMutationVariables = Exact<{
+  followedUserId: Scalars['ID'];
+}>;
+
+
+export type CreateFollowMutation = (
+  { __typename?: 'Mutation' }
+  & { createFollow?: Maybe<(
+    { __typename?: 'CreateFollowMutationPayload' }
+    & { follow?: Maybe<(
+      { __typename?: 'FollowNode' }
+      & Pick<FollowNode, 'id'>
+    )> }
+  )> }
+);
+
+export type UpdateFollowMutationVariables = Exact<{
+  followId: Scalars['ID'];
+  isFollowing: Scalars['Boolean'];
+}>;
+
+
+export type UpdateFollowMutation = (
+  { __typename?: 'Mutation' }
+  & { updateFollow?: Maybe<(
+    { __typename?: 'UpdateFollowMutationPayload' }
+    & { follow?: Maybe<(
+      { __typename?: 'FollowNode' }
+      & Pick<FollowNode, 'id'>
+    )> }
+  )> }
+);
+
 export type CreateProfileMutationVariables = Exact<{
   relatedUserId: Scalars['ID'];
   profileName: Scalars['String'];
@@ -1224,16 +1270,37 @@ export type SocialAuthMutation = (
     { __typename?: 'SocialAuth' }
     & { social?: Maybe<(
       { __typename?: 'SocialType' }
-      & Pick<SocialType, 'id' | 'provider' | 'uid' | 'extraData' | 'created' | 'modified'>
+      & Pick<SocialType, 'id'>
       & { user: (
         { __typename?: 'UserNode' }
-        & Pick<UserNode, 'id' | 'email' | 'isActive' | 'firstName' | 'lastName'>
+        & Pick<UserNode, 'id'>
         & { relatedUser?: Maybe<(
           { __typename?: 'ProfileNode' }
           & Pick<ProfileNode, 'id'>
         )> }
       ) }
     )> }
+  )> }
+);
+
+export type GetMyFollowingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyFollowingsQuery = (
+  { __typename?: 'Query' }
+  & { myFollowings?: Maybe<(
+    { __typename?: 'FollowNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'FollowNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'FollowNode' }
+        & Pick<FollowNode, 'id' | 'isFollowing'>
+        & { followedUser: (
+          { __typename?: 'UserNode' }
+          & Pick<UserNode, 'id'>
+        ) }
+      )> }
+    )>> }
   )> }
 );
 
@@ -1311,7 +1378,7 @@ export type GetAllIdeasQuery = (
         & Pick<IdeaNode, 'id' | 'title' | 'content'>
         & { ideaCreator: (
           { __typename?: 'UserNode' }
-          & Pick<UserNode, 'id' | 'email'>
+          & Pick<UserNode, 'id'>
         ) }
       )> }
     )>> }
@@ -1342,7 +1409,7 @@ export type GetAllUsersQuery = (
       { __typename?: 'UserNodeEdge' }
       & { node?: Maybe<(
         { __typename?: 'UserNode' }
-        & Pick<UserNode, 'id' | 'email' | 'username'>
+        & Pick<UserNode, 'id' | 'username'>
         & { relatedUser?: Maybe<(
           { __typename?: 'ProfileNode' }
           & Pick<ProfileNode, 'id' | 'profileName' | 'selfIntroduction'>
@@ -1359,7 +1426,7 @@ export type GetMyUserInfoQuery = (
   { __typename?: 'Query' }
   & { myUserInfo?: Maybe<(
     { __typename?: 'UserNode' }
-    & Pick<UserNode, 'id' | 'email'>
+    & Pick<UserNode, 'id'>
     & { relatedUser?: Maybe<(
       { __typename?: 'ProfileNode' }
       & Pick<ProfileNode, 'profileName' | 'profileImage'>
@@ -1436,6 +1503,77 @@ export type CountSecondsSubscription = (
 );
 
 
+export const CreateFollowDocument = gql`
+    mutation CreateFollow($followedUserId: ID!) {
+  createFollow(input: {followedUserId: $followedUserId}) {
+    follow {
+      id
+    }
+  }
+}
+    `;
+export type CreateFollowMutationFn = Apollo.MutationFunction<CreateFollowMutation, CreateFollowMutationVariables>;
+
+/**
+ * __useCreateFollowMutation__
+ *
+ * To run a mutation, you first call `useCreateFollowMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFollowMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFollowMutation, { data, loading, error }] = useCreateFollowMutation({
+ *   variables: {
+ *      followedUserId: // value for 'followedUserId'
+ *   },
+ * });
+ */
+export function useCreateFollowMutation(baseOptions?: Apollo.MutationHookOptions<CreateFollowMutation, CreateFollowMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateFollowMutation, CreateFollowMutationVariables>(CreateFollowDocument, options);
+      }
+export type CreateFollowMutationHookResult = ReturnType<typeof useCreateFollowMutation>;
+export type CreateFollowMutationResult = Apollo.MutationResult<CreateFollowMutation>;
+export type CreateFollowMutationOptions = Apollo.BaseMutationOptions<CreateFollowMutation, CreateFollowMutationVariables>;
+export const UpdateFollowDocument = gql`
+    mutation UpdateFollow($followId: ID!, $isFollowing: Boolean!) {
+  updateFollow(input: {followId: $followId, isFollowing: $isFollowing}) {
+    follow {
+      id
+    }
+  }
+}
+    `;
+export type UpdateFollowMutationFn = Apollo.MutationFunction<UpdateFollowMutation, UpdateFollowMutationVariables>;
+
+/**
+ * __useUpdateFollowMutation__
+ *
+ * To run a mutation, you first call `useUpdateFollowMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateFollowMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateFollowMutation, { data, loading, error }] = useUpdateFollowMutation({
+ *   variables: {
+ *      followId: // value for 'followId'
+ *      isFollowing: // value for 'isFollowing'
+ *   },
+ * });
+ */
+export function useUpdateFollowMutation(baseOptions?: Apollo.MutationHookOptions<UpdateFollowMutation, UpdateFollowMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateFollowMutation, UpdateFollowMutationVariables>(UpdateFollowDocument, options);
+      }
+export type UpdateFollowMutationHookResult = ReturnType<typeof useUpdateFollowMutation>;
+export type UpdateFollowMutationResult = Apollo.MutationResult<UpdateFollowMutation>;
+export type UpdateFollowMutationOptions = Apollo.BaseMutationOptions<UpdateFollowMutation, UpdateFollowMutationVariables>;
 export const CreateProfileDocument = gql`
     mutation CreateProfile($relatedUserId: ID!, $profileName: String!, $googleImageUrl: String!) {
   createProfile(
@@ -1526,19 +1664,10 @@ export const SocialAuthDocument = gql`
       id
       user {
         id
-        email
-        isActive
-        firstName
-        lastName
         relatedUser {
           id
         }
       }
-      provider
-      uid
-      extraData
-      created
-      modified
     }
   }
 }
@@ -1569,6 +1698,48 @@ export function useSocialAuthMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SocialAuthMutationHookResult = ReturnType<typeof useSocialAuthMutation>;
 export type SocialAuthMutationResult = Apollo.MutationResult<SocialAuthMutation>;
 export type SocialAuthMutationOptions = Apollo.BaseMutationOptions<SocialAuthMutation, SocialAuthMutationVariables>;
+export const GetMyFollowingsDocument = gql`
+    query GetMyFollowings {
+  myFollowings {
+    edges {
+      node {
+        id
+        isFollowing
+        followedUser {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyFollowingsQuery__
+ *
+ * To run a query within a React component, call `useGetMyFollowingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyFollowingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyFollowingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyFollowingsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>(GetMyFollowingsDocument, options);
+      }
+export function useGetMyFollowingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>(GetMyFollowingsDocument, options);
+        }
+export type GetMyFollowingsQueryHookResult = ReturnType<typeof useGetMyFollowingsQuery>;
+export type GetMyFollowingsLazyQueryHookResult = ReturnType<typeof useGetMyFollowingsLazyQuery>;
+export type GetMyFollowingsQueryResult = Apollo.QueryResult<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>;
 export const GetIndexPageItemsDocument = gql`
     query GetIndexPageItems {
   allIdeas(first: 10) {
@@ -1655,7 +1826,6 @@ export const GetAllIdeasDocument = gql`
         content
         ideaCreator {
           id
-          email
         }
       }
     }
@@ -1733,7 +1903,6 @@ export const GetAllUsersDocument = gql`
     edges {
       node {
         id
-        email
         username
         relatedUser {
           id
@@ -1776,7 +1945,6 @@ export const GetMyUserInfoDocument = gql`
     query GetMyUserInfo {
   myUserInfo {
     id
-    email
     relatedUser {
       profileName
       profileImage
