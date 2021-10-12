@@ -7,7 +7,10 @@ const SearchIndexPage: CustomNextPage = () => {
     <>
       <NextSeo title="検索" />
 
-      <div>検索</div>
+      <div>
+        <h1>アイデアやメモ、ユーザーを検索</h1>
+        <input type="search" className="block p-2 border" placeholder="Search" />
+      </div>
     </>
   );
 };

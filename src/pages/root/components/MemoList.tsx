@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FiHeart } from "react-icons/fi";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
 
 export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) => {
@@ -10,13 +11,14 @@ export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
         <ul className="md:grid md:grid-cols-1 lg:grid-cols-2">
           {props?.allMemos?.edges.map((memo, index) => {
             return (
-              <li className="p-2 lg:p-4" key={index.toString()}>
+              <li className="p-4 md:p-2 m-2 rounded border shadow-sm" key={index.toString()}>
                 <Link href="/">
-                  <a className="block p-2 min-h-full bg-blue-50 rounded shadow">
-                    {memo?.node?.title}
-                    いいねの数:{memo?.node?.likedMemo.edges.length.toString()}
-                  </a>
+                  <a className="block">{memo?.node?.title}</a>
                 </Link>
+                <div className="flex items-center">
+                  <FiHeart className="w-4 h-4" />
+                  <span className="block">{memo?.node?.likedMemo.edges.length.toString()}</span>
+                </div>
               </li>
             );
           })}

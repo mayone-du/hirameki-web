@@ -20,6 +20,7 @@ export const IdeaEditor = () => {
           placeholder="Write something!"
           editorKey="test-key"
           editorState={editorState}
+          // eslint-disable-next-line react/jsx-handler-names
           onChange={setEditorState}
         />
       )}

@@ -4,5 +4,14 @@ query GetIdea($id: ID!) {
     title
     content
     createdAt
+    ideaCreator {
+      id
+      relatedUser {
+        id
+        profileName
+        profileImage
+        googleImageUrl
+      }
+    }
   }
 }

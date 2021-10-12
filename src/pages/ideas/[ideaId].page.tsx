@@ -52,17 +52,17 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
     <>
       <NextSeo title={props.idea?.title ?? "アイデア"} />
 
-      <div>userinfo : {userInfo.isLogin}</div>
+      <div className="flex">
+        <article className="p-2 md:mr-4 md:w-2/3 rounded-xl border">
+          <div>{props.idea?.ideaCreator.id === userInfo.userId && "自分のアイデアです"}</div>
 
-      <div>
-        {props.idea?.id}
-        <br />
+          <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
+          <p>{props.idea?.content}</p>
+          <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
+        </article>
 
-        {props.idea?.title}
-        <br />
-        {props.idea?.content}
-        <br />
-        {props.idea?.createdAt}
+        {/* サイドバー */}
+        <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">aside</aside>
       </div>
     </>
   );

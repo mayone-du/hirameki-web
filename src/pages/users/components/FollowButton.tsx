@@ -112,7 +112,7 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
 
   // 初期値であれば何も表示しない
   if (followingState.isFollowing === null) {
-    return null;
+    return <div className="py-1 px-2 text-transparent border border-transparent"> </div>;
   }
 
   return (

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AiOutlineHeart } from "react-icons/ai";
 import { FiHeart } from "react-icons/fi";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
 
@@ -32,7 +31,7 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                       />
                     </a>
                   </Link>
-                  <div>
+                  <div className="ml-2 ">
                     <Link href={`/users/${idea?.node?.ideaCreator.id}`}>
                       <a className="block">
                         <h4 className="text-sm text-gray-700">

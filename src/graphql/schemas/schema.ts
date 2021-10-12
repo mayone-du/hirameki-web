@@ -1400,6 +1400,14 @@ export type GetIdeaQuery = (
   & { idea?: Maybe<(
     { __typename?: 'IdeaNode' }
     & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt'>
+    & { ideaCreator: (
+      { __typename?: 'UserNode' }
+      & Pick<UserNode, 'id'>
+      & { relatedUser?: Maybe<(
+        { __typename?: 'ProfileNode' }
+        & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
+      )> }
+    ) }
   )> }
 );
 
@@ -1898,6 +1906,15 @@ export const GetIdeaDocument = gql`
     title
     content
     createdAt
+    ideaCreator {
+      id
+      relatedUser {
+        id
+        profileName
+        profileImage
+        googleImageUrl
+      }
+    }
   }
 }
     `;
