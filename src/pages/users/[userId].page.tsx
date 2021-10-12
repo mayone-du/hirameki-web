@@ -50,14 +50,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 // ユーザーの詳細ページ
 const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
-  const PAGE_NAME =
-    (props.user?.relatedUser?.profileName || props.user?.username) + "のプロフィール";
-
   const userInfo = useReactiveVar(userInfoVar);
 
   return (
     <>
-      <NextSeo title={PAGE_NAME} />
+      <NextSeo
+        title={(props.user?.relatedUser?.profileName || props.user?.username) + "のプロフィール"}
+      />
 
       <div>
         <section>
@@ -115,26 +114,30 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
                   </Tooltip>
                 )}
                 {props.user?.relatedUser?.twitterUsername && (
-                  <a
-                    href={`https://twitter.com/${props.user.relatedUser.twitterUsername}`}
-                    target="_blank"
-                    className="block mx-1"
-                    rel="noreferrer"
-                    data-tip={`@${props.user.relatedUser.twitterUsername}`}
-                  >
-                    <AiOutlineTwitter className="block w-6 h-6 text-gray-500" />
-                  </a>
+                  <Tooltip tooltipText={`@${props.user.relatedUser.twitterUsername}`}>
+                    <a
+                      href={`https://twitter.com/${props.user.relatedUser.twitterUsername}`}
+                      target="_blank"
+                      className="block mx-1"
+                      rel="noreferrer"
+                      data-tip={`@${props.user.relatedUser.twitterUsername}`}
+                    >
+                      <AiOutlineTwitter className="block w-6 h-6 text-gray-500" />
+                    </a>
+                  </Tooltip>
                 )}
                 {props.user?.relatedUser?.websiteUrl && (
-                  <a
-                    href={props.user.relatedUser.websiteUrl}
-                    target="_blank"
-                    className="block mx-1"
-                    rel="noreferrer"
-                    data-tip={`${props.user.relatedUser.websiteUrl}`}
-                  >
-                    <AiOutlineLink className="block w-6 h-6 text-gray-500" />
-                  </a>
+                  <Tooltip tooltipText={`${props.user.relatedUser.websiteUrl}`}>
+                    <a
+                      href={props.user.relatedUser.websiteUrl}
+                      target="_blank"
+                      className="block mx-1"
+                      rel="noreferrer"
+                      data-tip={`${props.user.relatedUser.websiteUrl}`}
+                    >
+                      <AiOutlineLink className="block w-6 h-6 text-gray-500" />
+                    </a>
+                  </Tooltip>
                 )}
               </div>
             </div>

@@ -46,13 +46,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
-  const PAGE_NAME = props.idea?.title ?? "";
-
   const userInfo = useReactiveVar(userInfoVar);
 
   return (
     <>
-      <NextSeo title={PAGE_NAME} />
+      <NextSeo title={props.idea?.title ?? "アイデア"} />
 
       <div>userinfo : {userInfo.isLogin}</div>
 

@@ -23,8 +23,6 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const IndexPage: CustomNextPage<GetIndexPageItemsQuery | undefined> = (props) => {
-  const PAGE_NAME = "トップページ";
-
   const userInfo = useReactiveVar(userInfoVar);
 
   const handleClick = useCallback(() => {
@@ -33,7 +31,7 @@ const IndexPage: CustomNextPage<GetIndexPageItemsQuery | undefined> = (props) =>
 
   return (
     <>
-      <NextSeo title={PAGE_NAME} />
+      <NextSeo title="トップページ" />
       <BreadcrumbJsonLd
         itemListElements={[
           {

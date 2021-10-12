@@ -9,8 +9,6 @@ type ContactInputs = {
 };
 
 const ContactIndexPage: CustomNextPage = () => {
-  const PAGE_NAME = "お問い合わせ";
-
   const {
     register,
     formState: { errors },
@@ -21,7 +19,7 @@ const ContactIndexPage: CustomNextPage = () => {
   };
   return (
     <>
-      <NextSeo title={PAGE_NAME} />
+      <NextSeo title="お問い合わせ" />
       <div>
         <h1>お問い合わせ</h1>
         <form onSubmit={handleSubmit(onSubmit)}>

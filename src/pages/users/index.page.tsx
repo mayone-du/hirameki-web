@@ -16,11 +16,9 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const UsersIndexPage: CustomNextPage<GetAllUsersQuery | undefined> = (props) => {
-  const PAGE_NAME = "ユーザー一覧";
-
   return (
     <>
-      <NextSeo title={PAGE_NAME} />
+      <NextSeo title="ユーザー情報一覧" />
 
       <div>
         {props.allUsers?.edges.map((user, index) => {
