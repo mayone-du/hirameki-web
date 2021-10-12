@@ -1,5 +1,5 @@
 query GetIndexPageItems {
-  allIdeas(first: 10) {
+  allIdeas(first: 10, isPublished: true) {
     edges {
       node {
         id
@@ -10,6 +10,7 @@ query GetIndexPageItems {
           relatedUser {
             profileName
             profileImage
+            googleImageUrl
           }
         }
         likedIdea {
@@ -22,7 +23,7 @@ query GetIndexPageItems {
       }
     }
   }
-  allMemos(first: 10) {
+  allMemos(first: 10, isPublished: true) {
     edges {
       node {
         id
@@ -32,6 +33,7 @@ query GetIndexPageItems {
           relatedUser {
             profileName
             profileImage
+            googleImageUrl
           }
         }
         likedMemo {

@@ -7,6 +7,12 @@ query GetAllIdeas {
         content
         ideaCreator {
           id
+          relatedUser {
+            id
+            profileName
+            profileImage
+            googleImageUrl
+          }
         }
       }
     }

@@ -1322,7 +1322,7 @@ export type GetIndexPageItemsQuery = (
           & Pick<UserNode, 'id'>
           & { relatedUser?: Maybe<(
             { __typename?: 'ProfileNode' }
-            & Pick<ProfileNode, 'profileName' | 'profileImage'>
+            & Pick<ProfileNode, 'profileName' | 'profileImage' | 'googleImageUrl'>
           )> }
         ), likedIdea: (
           { __typename?: 'LikeNodeConnection' }
@@ -1348,7 +1348,7 @@ export type GetIndexPageItemsQuery = (
           & Pick<UserNode, 'id'>
           & { relatedUser?: Maybe<(
             { __typename?: 'ProfileNode' }
-            & Pick<ProfileNode, 'profileName' | 'profileImage'>
+            & Pick<ProfileNode, 'profileName' | 'profileImage' | 'googleImageUrl'>
           )> }
         ), likedMemo: (
           { __typename?: 'LikeNodeConnection' }
@@ -1380,6 +1380,10 @@ export type GetAllIdeasQuery = (
         & { ideaCreator: (
           { __typename?: 'UserNode' }
           & Pick<UserNode, 'id'>
+          & { relatedUser?: Maybe<(
+            { __typename?: 'ProfileNode' }
+            & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
+          )> }
         ) }
       )> }
     )>> }
@@ -1762,7 +1766,7 @@ export type GetMyFollowingsLazyQueryHookResult = ReturnType<typeof useGetMyFollo
 export type GetMyFollowingsQueryResult = Apollo.QueryResult<GetMyFollowingsQuery, GetMyFollowingsQueryVariables>;
 export const GetIndexPageItemsDocument = gql`
     query GetIndexPageItems {
-  allIdeas(first: 10) {
+  allIdeas(first: 10, isPublished: true) {
     edges {
       node {
         id
@@ -1773,6 +1777,7 @@ export const GetIndexPageItemsDocument = gql`
           relatedUser {
             profileName
             profileImage
+            googleImageUrl
           }
         }
         likedIdea {
@@ -1785,7 +1790,7 @@ export const GetIndexPageItemsDocument = gql`
       }
     }
   }
-  allMemos(first: 10) {
+  allMemos(first: 10, isPublished: true) {
     edges {
       node {
         id
@@ -1795,6 +1800,7 @@ export const GetIndexPageItemsDocument = gql`
           relatedUser {
             profileName
             profileImage
+            googleImageUrl
           }
         }
         likedMemo {
@@ -1846,6 +1852,12 @@ export const GetAllIdeasDocument = gql`
         content
         ideaCreator {
           id
+          relatedUser {
+            id
+            profileName
+            profileImage
+            googleImageUrl
+          }
         }
       }
     }
