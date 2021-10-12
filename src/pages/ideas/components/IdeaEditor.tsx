@@ -1,29 +1,20 @@
-import "draft-js/dist/Draft.css";
+import "easymde/dist/easymde.min.css";
 
-import { Editor, EditorState } from "draft-js";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import SimpleMdeReact from "react-simplemde-editor";
 
 export const IdeaEditor = () => {
-  const [isEditorEnable, setIsEditorEnable] = useState(false);
-  const [editorState, setEditorState] = useState(() => {
-    return EditorState.createEmpty();
-  });
+  const [value, setValue] = useState("Initial value");
 
-  useEffect(() => {
-    setIsEditorEnable(true);
+  const handleChange = useCallback((value: string) => {
+    setValue(value);
   }, []);
 
   return (
-    <>
-      {isEditorEnable && (
-        <Editor
-          placeholder="Write something!"
-          editorKey="test-key"
-          editorState={editorState}
-          // eslint-disable-next-line react/jsx-handler-names
-          onChange={setEditorState}
-        />
-      )}
-    </>
+    <div>
+      <div>
+        <SimpleMdeReact value={value} onChange={handleChange} />
+      </div>
+    </div>
   );
 };
