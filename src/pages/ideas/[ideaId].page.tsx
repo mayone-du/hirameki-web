@@ -10,6 +10,7 @@ import type {
 } from "src/graphql/schemas/schema";
 import { GetAllIdeasDocument, GetIdeaDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
+import { IdeaPreview } from "src/pages/ideas/components/IdeaPreview";
 
 // 各アイデアのIDを取得
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -59,6 +60,10 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
           <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
           <p>{props.idea?.content}</p>
           <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
+
+          <div className="bg-red-50">
+            <IdeaPreview markdown={props.idea?.content ?? ""} />
+          </div>
         </article>
 
         {/* サイドバー */}
