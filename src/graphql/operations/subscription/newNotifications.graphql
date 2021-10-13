@@ -1,0 +1,22 @@
+subscription NewNotifications($userId: ID!) {
+  newNotifications(userId: $userId) {
+    edges {
+      node {
+        id
+        notificationType
+        notifiedItemType
+        notifiedItemId
+        isChecked
+        notificator {
+          id
+          relatedUser {
+            id
+            profileName
+            profileImage
+            googleImageUrl
+          }
+        }
+      }
+    }
+  }
+}

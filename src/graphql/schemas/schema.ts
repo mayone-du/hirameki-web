@@ -830,11 +830,26 @@ export type SocialType = {
 export type Subscription = {
   __typename?: 'Subscription';
   countSeconds?: Maybe<Scalars['Float']>;
+  newNotifications?: Maybe<NotificationNodeConnection>;
 };
 
 
 export type SubscriptionCountSecondsArgs = {
   upTo?: Maybe<Scalars['Int']>;
+};
+
+
+export type SubscriptionNewNotificationsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isChecked?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  notificationReciever?: Maybe<Scalars['ID']>;
+  notificationType?: Maybe<Scalars['String']>;
+  notificator?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
+  userId: Scalars['ID'];
 };
 
 export type ThreadNode = Node & {
@@ -1534,6 +1549,33 @@ export type CountSecondsSubscription = (
   & Pick<Subscription, 'countSeconds'>
 );
 
+export type NewNotificationsSubscriptionVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type NewNotificationsSubscription = (
+  { __typename?: 'Subscription' }
+  & { newNotifications?: Maybe<(
+    { __typename?: 'NotificationNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'NotificationNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'NotificationNode' }
+        & Pick<NotificationNode, 'id' | 'notificationType' | 'notifiedItemType' | 'notifiedItemId' | 'isChecked'>
+        & { notificator: (
+          { __typename?: 'UserNode' }
+          & Pick<UserNode, 'id'>
+          & { relatedUser?: Maybe<(
+            { __typename?: 'ProfileNode' }
+            & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
+          )> }
+        ) }
+      )> }
+    )>> }
+  )> }
+);
+
 
 export const CreateFollowDocument = gql`
     mutation CreateFollow($followedUserId: ID!) {
@@ -2151,3 +2193,50 @@ export function useCountSecondsSubscription(baseOptions: Apollo.SubscriptionHook
       }
 export type CountSecondsSubscriptionHookResult = ReturnType<typeof useCountSecondsSubscription>;
 export type CountSecondsSubscriptionResult = Apollo.SubscriptionResult<CountSecondsSubscription>;
+export const NewNotificationsDocument = gql`
+    subscription NewNotifications($userId: ID!) {
+  newNotifications(userId: $userId) {
+    edges {
+      node {
+        id
+        notificationType
+        notifiedItemType
+        notifiedItemId
+        isChecked
+        notificator {
+          id
+          relatedUser {
+            id
+            profileName
+            profileImage
+            googleImageUrl
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useNewNotificationsSubscription__
+ *
+ * To run a query within a React component, call `useNewNotificationsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewNotificationsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewNotificationsSubscription({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useNewNotificationsSubscription(baseOptions: Apollo.SubscriptionHookOptions<NewNotificationsSubscription, NewNotificationsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewNotificationsSubscription, NewNotificationsSubscriptionVariables>(NewNotificationsDocument, options);
+      }
+export type NewNotificationsSubscriptionHookResult = ReturnType<typeof useNewNotificationsSubscription>;
+export type NewNotificationsSubscriptionResult = Apollo.SubscriptionResult<NewNotificationsSubscription>;

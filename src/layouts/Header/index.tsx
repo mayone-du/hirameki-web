@@ -22,8 +22,8 @@ export const Header: React.VFC = memo(() => {
       href: "/settings",
     },
     {
-      label: "Reports",
-      href: "##",
+      label: "My Ideas",
+      href: "/",
     },
   ];
 
@@ -52,7 +52,7 @@ export const Header: React.VFC = memo(() => {
             return (
               <li key={index.toString()} className="mx-2">
                 <Link href={menu.href}>
-                  <a>{menu.label}</a>
+                  <a>{menu.jsxIcon}</a>
                 </Link>
               </li>
             );

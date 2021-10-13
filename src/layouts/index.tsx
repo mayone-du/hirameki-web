@@ -36,14 +36,13 @@ export const Layout = (page: NextPage) => {
             query: GetMyUserInfoDocument,
           });
 
-          userInfoVar({
+          return userInfoVar({
             isLoading: false,
             isLogin: true,
             userId: data.myUserInfo?.id ?? "",
             profileName: data.myUserInfo?.relatedUser?.profileName ?? "",
             profileImage: data.myUserInfo?.relatedUser?.profileImage ?? "",
           });
-          return;
         }
 
         // グローバル管理しているユーザー情報を更新

@@ -25,7 +25,11 @@ const UsersIndexPage: CustomNextPage<GetAllUsersQuery | undefined> = (props) => 
           return (
             <div key={index.toString()} className="p-2 m-2 bg-blue-50 rounded">
               <Link href={`/users/${user?.node?.id}`}>
-                <a className="block">{user?.node?.username}</a>
+                <a className="block">
+                  {user?.node?.relatedUser?.profileName
+                    ? user.node.relatedUser.profileName
+                    : user?.node?.username}
+                </a>
               </Link>
             </div>
           );
