@@ -13,6 +13,7 @@ import type {
 import { GetAllUsersDocument, GetUserDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
 import { EditProfileButton, FollowButton } from "src/pages/users/components";
+import { FollowerPopover } from "src/pages/users/components/FollowerPopover";
 
 // 各ユーザーのIDを取得
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -84,13 +85,14 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
 
               {/* フォロワーやいいね、アイデアの数など */}
               <div className="flex items-center">
-                <p className="pr-4">
+                {/* <button className="block mr-4">
                   <span className="text-lg font-bold">
                     {props.user?.followedUser.edges.length.toString()}
                   </span>{" "}
                   Followers
-                </p>
-                <p className="pr-4">
+                </button> */}
+                <FollowerPopover {...props} />
+                <p className="mr-4">
                   <span className="text-lg font-bold">
                     {props.user?.ideaCreator.edges.length.toString()}
                   </span>{" "}

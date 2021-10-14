@@ -1289,7 +1289,7 @@ export type SocialAuthMutation = (
       & Pick<SocialType, 'id'>
       & { user: (
         { __typename?: 'UserNode' }
-        & Pick<UserNode, 'id'>
+        & Pick<UserNode, 'id' | 'firstName' | 'lastName'>
         & { relatedUser?: Maybe<(
           { __typename?: 'ProfileNode' }
           & Pick<ProfileNode, 'id'>
@@ -1502,7 +1502,7 @@ export type GetUserQuery = (
             & Pick<UserNode, 'id'>
             & { relatedUser?: Maybe<(
               { __typename?: 'ProfileNode' }
-              & Pick<ProfileNode, 'profileName'>
+              & Pick<ProfileNode, 'profileName' | 'profileImage' | 'googleImageUrl'>
             )> }
           ) }
         )> }
@@ -1738,6 +1738,8 @@ export const SocialAuthDocument = gql`
       id
       user {
         id
+        firstName
+        lastName
         relatedUser {
           id
         }
@@ -2104,6 +2106,8 @@ export const GetUserDocument = gql`
             id
             relatedUser {
               profileName
+              profileImage
+              googleImageUrl
             }
           }
         }

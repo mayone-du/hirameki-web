@@ -14,7 +14,7 @@ const IdeaEditor = dynamic(
   {
     ssr: false,
     loading: () => {
-      return <div>aaaaaaaaaaaaaa</div>;
+      return <div>Editor Loading...</div>;
     },
   },
 );

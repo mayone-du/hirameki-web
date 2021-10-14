@@ -30,6 +30,47 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
   const [createFollow, { loading: isCreateLoading }] = useCreateFollowMutation();
   const [updateFollow, { loading: isUpdateLoading }] = useUpdateFollowMutation();
 
+  useEffect(() => {
+    // ログインしていない場合はstateの初期値を更新するだけ
+    if (!userInfo.isLoading && !userInfo.isLogin) {
+      return setFollowingState({
+        followId: "",
+        isAlready: false,
+        isFollowing: false,
+      });
+    }
+    // ログイン済みであればクエリを実行
+    if (!userInfo.isLoading && userInfo.isLogin) {
+      query();
+      // フォロー中のユーザーに、表示しているページのユーザーIDが含まれていれば(1度でもフォローされていれば)isAlreadyをtrueにする
+      data?.myFollowings?.edges.forEach((follow) => {
+        if (follow?.node?.followedUser.id === props.pageUserId) {
+          return setFollowingState({
+            isAlready: true,
+            // フラグによって変更
+            isFollowing: follow.node.isFollowing,
+            followId: follow.node.id,
+          });
+        } else {
+          return setFollowingState({
+            followId: "",
+            isAlready: false,
+            isFollowing: false,
+          });
+        }
+      });
+
+      data?.myFollowings?.edges.length === 0 &&
+        setFollowingState({
+          followId: "",
+          isAlready: false,
+          isFollowing: false,
+        });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo.isLoading, data]);
+
   // フォローボタンをクリックしたときの処理
   const handleClick = useCallback(async () => {
     // ログインしていない場合は認証モーダルを開く
@@ -57,7 +98,7 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
       });
     } else if (!followingState.isAlready && !followingState.isFollowing) {
       // 今までに一度もフォローしていない場合は、Followを作成
-      const { errors } = await createFollow({
+      const { data, errors } = await createFollow({
         variables: {
           followedUserId: props.pageUserId,
         },
@@ -65,50 +106,15 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
       if (errors) {
         console.error(errors);
       }
-      setFollowingState((prev) => {
-        return {
-          ...prev,
-          isFollowing: true,
-        };
+      setFollowingState({
+        followId: data?.createFollow?.follow?.id ?? "",
+        isAlready: true,
+        isFollowing: true,
       });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [followingState]);
-
-  useEffect(() => {
-    // ログインしていない場合はstateの初期値を更新するだけ
-    if (!userInfo.isLoading && !userInfo.isLogin) {
-      return setFollowingState({
-        followId: "",
-        isAlready: false,
-        isFollowing: false,
-      });
-    }
-    // ログイン済みであればクエリを実行
-    if (!userInfo.isLoading && userInfo.isLogin) {
-      query();
-      // フォロー中のユーザーに、表示しているページのユーザーIDが含まれていれば(1度でもフォローされていれば)isAlreadyをtrueにする
-      data?.myFollowings?.edges.forEach((follow) => {
-        if (follow?.node?.followedUser.id === props.pageUserId) {
-          setFollowingState({
-            isAlready: true,
-            // フラグによって変更
-            isFollowing: follow.node.isFollowing,
-            followId: follow.node.id,
-          });
-        } else {
-          setFollowingState({
-            followId: "",
-            isAlready: false,
-            isFollowing: false,
-          });
-        }
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo.isLoading, data]);
 
   // 初期値であれば何も表示しない
   if (followingState.isFollowing === null) {

@@ -4,6 +4,8 @@ mutation SocialAuth($accessToken: String!) {
       id
       user {
         id
+        firstName
+        lastName
         relatedUser {
           id
         }
