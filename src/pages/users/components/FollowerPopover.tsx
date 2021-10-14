@@ -1,8 +1,9 @@
 import { Popover } from "@headlessui/react";
 import Link from "next/link";
+import { memo } from "react";
 import type { GetUserQuery } from "src/graphql/schemas/schema";
 
-export const FollowerPopover: React.VFC<GetUserQuery> = (props) => {
+export const FollowerPopover: React.VFC<GetUserQuery> = memo((props) => {
   return (
     <div>
       <Popover className="relative">
@@ -23,7 +24,7 @@ export const FollowerPopover: React.VFC<GetUserQuery> = (props) => {
                         <Popover.Button className="block w-full text-left">
                           <Link href={`/users/${user?.node?.followingUser.id}`}>
                             <a
-                              className={`flex w-full py-2 px-4 hover:bg-gray-200 transition-colors duration-300 ${
+                              className={`flex items-center w-full py-2 px-4 hover:bg-gray-200 transition-colors duration-300 ${
                                 index === 0 && "border-b"
                               }`}
                             >
@@ -35,11 +36,19 @@ export const FollowerPopover: React.VFC<GetUserQuery> = (props) => {
                                     : user?.node?.followingUser.relatedUser?.googleImageUrl ?? ""
                                 }
                                 alt="Profile"
-                                className="block object-cover overflow-hidden mr-2 w-6 h-6 rounded-full"
+                                className="block object-cover overflow-hidden mr-2 w-8 h-8 rounded-full"
                               />
-                              <span className="block">
-                                {user?.node?.followingUser.relatedUser?.profileName}
-                              </span>
+                              <div className="flex items-center">
+                                <div>
+                                  <span className="block text-sm">
+                                    {user?.node?.followingUser.relatedUser?.profileName}
+                                  </span>
+                                  <span className="block text-xs text-gray-500">
+                                    @{user?.node?.followingUser.id}
+                                  </span>
+                                </div>
+                                {/* TODO: フォローボタンの設置 */}
+                              </div>
                             </a>
                           </Link>
                         </Popover.Button>
@@ -54,4 +63,6 @@ export const FollowerPopover: React.VFC<GetUserQuery> = (props) => {
       </Popover>
     </div>
   );
-};
+});
+
+FollowerPopover.displayName = "FollowerPopover";

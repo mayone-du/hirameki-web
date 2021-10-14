@@ -2,6 +2,7 @@ import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { AiOutlineGithub, AiOutlineLink, AiOutlineTwitter } from "react-icons/ai";
+import { BiLockAlt } from "react-icons/bi";
 import { Tooltip } from "src/components/Tooltip";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { initializeApollo } from "src/graphql/apollo/client";
@@ -85,12 +86,6 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
 
               {/* フォロワーやいいね、アイデアの数など */}
               <div className="flex items-center">
-                {/* <button className="block mr-4">
-                  <span className="text-lg font-bold">
-                    {props.user?.followedUser.edges.length.toString()}
-                  </span>{" "}
-                  Followers
-                </button> */}
                 <FollowerPopover {...props} />
                 <p className="mr-4">
                   <span className="text-lg font-bold">
@@ -147,38 +142,16 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
         </section>
 
         <div>
-          フォロワー
-          <br />
-          {props.user?.followedUser.edges.map((follow, index) => {
-            return (
-              <div key={index.toString()}>
-                {follow?.node?.followingUser.relatedUser?.profileName}
-              </div>
-            );
-          })}
-        </div>
-
-        <div>
-          フォローしているユーザー
-          <br />
-          {props.user?.followingUser.edges.map((follow, index) => {
-            return (
-              <div key={index.toString()}>
-                {follow?.node?.followedUser.relatedUser?.profileName}
-              </div>
-            );
-          })}
-        </div>
-
-        <div>
           アイデア
           <br />
           {props.user?.ideaCreator.edges.map((idea, index) => {
             return (
-              <div className="m-2 bg-green-200" key={index.toString()}>
+              <div className="m-2 bg-green-100" key={index.toString()}>
                 {idea?.node?.title}
                 <br />
                 いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
+                <br />
+                {idea?.node?.isPublished ? "公開" : <BiLockAlt className="w-6 h-6" />}
               </div>
             );
           })}

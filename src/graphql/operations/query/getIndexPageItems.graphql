@@ -5,6 +5,15 @@ query GetIndexPageItems {
         id
         title
         content
+        createdAt
+        topics {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
         ideaCreator {
           id
           relatedUser {

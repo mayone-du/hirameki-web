@@ -38,11 +38,12 @@ query GetUser($id: ID!) {
         }
       }
     }
-    ideaCreator(isPublished: true) {
+    ideaCreator {
       edges {
         node {
           id
           title
+          isPublished
           topics {
             edges {
               node {

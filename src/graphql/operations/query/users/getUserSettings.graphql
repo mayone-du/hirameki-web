@@ -1,0 +1,15 @@
+query GetUserSettings($id: ID!) {
+  user(id: $id) {
+    id
+    relatedUser {
+      id
+      profileName
+      profileImage
+      googleImageUrl
+      selfIntroduction
+      githubUsername
+      twitterUsername
+      websiteUrl
+    }
+  }
+}

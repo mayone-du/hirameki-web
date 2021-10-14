@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FiHeart } from "react-icons/fi";
 import type { GetIndexPageItemsQuery } from "src/graphql/schemas/schema";
+import { fixDateFormat } from "src/libs/functions/fixDateFormat";
 
 export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) => {
   return (
@@ -31,6 +32,7 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                       />
                     </a>
                   </Link>
+                  {/* ユーザー情報など */}
                   <div className="ml-2 ">
                     <Link href={`/users/${idea?.node?.ideaCreator.id}`}>
                       <a className="block">
@@ -39,11 +41,15 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                         </h4>
                       </a>
                     </Link>
+                    {/* いいね */}
                     <div className="flex items-center text-xs text-gray-500">
-                      <FiHeart className="w-4 h-4" />
-                      <span className="block px-[2px]">
-                        {idea?.node?.likedIdea.edges.length.toString()}
-                      </span>
+                      <div className="flex items-center mr-2">
+                        <FiHeart className="w-4 h-4" />
+                        <span className="block px-[2px]">
+                          {idea?.node?.likedIdea.edges.length.toString()}
+                        </span>
+                      </div>
+                      <p className="mr-2">{fixDateFormat(idea?.node?.createdAt)}</p>
                     </div>
                   </div>
                 </div>

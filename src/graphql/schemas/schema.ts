@@ -1331,8 +1331,17 @@ export type GetIndexPageItemsQuery = (
       { __typename?: 'IdeaNodeEdge' }
       & { node?: Maybe<(
         { __typename?: 'IdeaNode' }
-        & Pick<IdeaNode, 'id' | 'title' | 'content'>
-        & { ideaCreator: (
+        & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt'>
+        & { topics: (
+          { __typename?: 'TopicNodeConnection' }
+          & { edges: Array<Maybe<(
+            { __typename?: 'TopicNodeEdge' }
+            & { node?: Maybe<(
+              { __typename?: 'TopicNode' }
+              & Pick<TopicNode, 'id' | 'name'>
+            )> }
+          )>> }
+        ), ideaCreator: (
           { __typename?: 'UserNode' }
           & Pick<UserNode, 'id'>
           & { relatedUser?: Maybe<(
@@ -1513,7 +1522,7 @@ export type GetUserQuery = (
         { __typename?: 'IdeaNodeEdge' }
         & { node?: Maybe<(
           { __typename?: 'IdeaNode' }
-          & Pick<IdeaNode, 'id' | 'title' | 'createdAt' | 'updatedAt'>
+          & Pick<IdeaNode, 'id' | 'title' | 'isPublished' | 'createdAt' | 'updatedAt'>
           & { topics: (
             { __typename?: 'TopicNodeConnection' }
             & { edges: Array<Maybe<(
@@ -1536,6 +1545,23 @@ export type GetUserQuery = (
         )> }
       )>> }
     ) }
+  )> }
+);
+
+export type GetUserSettingsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserSettingsQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'UserNode' }
+    & Pick<UserNode, 'id'>
+    & { relatedUser?: Maybe<(
+      { __typename?: 'ProfileNode' }
+      & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl' | 'selfIntroduction' | 'githubUsername' | 'twitterUsername' | 'websiteUrl'>
+    )> }
   )> }
 );
 
@@ -1824,6 +1850,15 @@ export const GetIndexPageItemsDocument = gql`
         id
         title
         content
+        createdAt
+        topics {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
         ideaCreator {
           id
           relatedUser {
@@ -2113,11 +2148,12 @@ export const GetUserDocument = gql`
         }
       }
     }
-    ideaCreator(isPublished: true) {
+    ideaCreator {
       edges {
         node {
           id
           title
+          isPublished
           topics {
             edges {
               node {
@@ -2169,6 +2205,51 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const GetUserSettingsDocument = gql`
+    query GetUserSettings($id: ID!) {
+  user(id: $id) {
+    id
+    relatedUser {
+      id
+      profileName
+      profileImage
+      googleImageUrl
+      selfIntroduction
+      githubUsername
+      twitterUsername
+      websiteUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserSettingsQuery__
+ *
+ * To run a query within a React component, call `useGetUserSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserSettingsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
+      }
+export function useGetUserSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserSettingsQuery, GetUserSettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserSettingsQuery, GetUserSettingsQueryVariables>(GetUserSettingsDocument, options);
+        }
+export type GetUserSettingsQueryHookResult = ReturnType<typeof useGetUserSettingsQuery>;
+export type GetUserSettingsLazyQueryHookResult = ReturnType<typeof useGetUserSettingsLazyQuery>;
+export type GetUserSettingsQueryResult = Apollo.QueryResult<GetUserSettingsQuery, GetUserSettingsQueryVariables>;
 export const CountSecondsDocument = gql`
     subscription CountSeconds($seconds: Int!) {
   countSeconds(upTo: $seconds)
