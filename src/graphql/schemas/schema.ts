@@ -1234,6 +1234,22 @@ export type UpdateFollowMutation = (
   )> }
 );
 
+export type CreateMemoMutationVariables = Exact<{
+  title: Scalars['String'];
+}>;
+
+
+export type CreateMemoMutation = (
+  { __typename?: 'Mutation' }
+  & { createMemo?: Maybe<(
+    { __typename?: 'CreateMemoMutationPayload' }
+    & { memo?: Maybe<(
+      { __typename?: 'MemoNode' }
+      & Pick<MemoNode, 'id'>
+    )> }
+  )> }
+);
+
 export type CreateProfileMutationVariables = Exact<{
   relatedUserId: Scalars['ID'];
   profileName: Scalars['String'];
@@ -1674,6 +1690,41 @@ export function useUpdateFollowMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateFollowMutationHookResult = ReturnType<typeof useUpdateFollowMutation>;
 export type UpdateFollowMutationResult = Apollo.MutationResult<UpdateFollowMutation>;
 export type UpdateFollowMutationOptions = Apollo.BaseMutationOptions<UpdateFollowMutation, UpdateFollowMutationVariables>;
+export const CreateMemoDocument = gql`
+    mutation CreateMemo($title: String!) {
+  createMemo(input: {title: $title}) {
+    memo {
+      id
+    }
+  }
+}
+    `;
+export type CreateMemoMutationFn = Apollo.MutationFunction<CreateMemoMutation, CreateMemoMutationVariables>;
+
+/**
+ * __useCreateMemoMutation__
+ *
+ * To run a mutation, you first call `useCreateMemoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMemoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMemoMutation, { data, loading, error }] = useCreateMemoMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useCreateMemoMutation(baseOptions?: Apollo.MutationHookOptions<CreateMemoMutation, CreateMemoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMemoMutation, CreateMemoMutationVariables>(CreateMemoDocument, options);
+      }
+export type CreateMemoMutationHookResult = ReturnType<typeof useCreateMemoMutation>;
+export type CreateMemoMutationResult = Apollo.MutationResult<CreateMemoMutation>;
+export type CreateMemoMutationOptions = Apollo.BaseMutationOptions<CreateMemoMutation, CreateMemoMutationVariables>;
 export const CreateProfileDocument = gql`
     mutation CreateProfile($relatedUserId: ID!, $profileName: String!, $googleImageUrl: String!) {
   createProfile(

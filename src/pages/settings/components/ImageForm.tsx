@@ -55,7 +55,9 @@ export const ImageForm: React.VFC<Props> = (props) => {
             className="block overflow-hidden mx-auto rounded-full cursor-pointer"
             alt="Profile"
           />
-          <span className="block mt-2 text-sm text-center text-gray-600">変更する</span>
+          <span className="block mt-2 text-sm text-center text-gray-600 cursor-pointer">
+            変更する
+          </span>
         </label>
       </form>
       <Transition appear show={isOpenModal} as="div">
@@ -97,7 +99,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
                 <img
                   src={imagePrevewSrc}
                   alt=""
-                  className="block object-cover overflow-hidden my-4 mx-auto w-20 h-20 rounded-full"
+                  className="block object-cover overflow-hidden my-4 mx-auto w-32 h-32 rounded-full"
                 />
 
                 <button

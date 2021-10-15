@@ -60,7 +60,7 @@ export const useAuthModal = () => {
             >
               <div className="overflow-hidden p-6 m-auto w-80 sm:w-96 bg-white rounded-lg shadow-xl transition-all transform">
                 <Dialog.Title as="h3" className="text-2xl font-bold text-center text-gray-900">
-                  TODO App
+                  Hirameki App
                 </Dialog.Title>
 
                 <p className="mt-4 text-xs text-gray-500">コンセプト</p>

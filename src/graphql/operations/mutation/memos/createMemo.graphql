@@ -1,0 +1,7 @@
+mutation CreateMemo($title: String!) {
+  createMemo(input: { title: $title }) {
+    memo {
+      id
+    }
+  }
+}
