@@ -1,5 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import React, { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type Props = {
   profileImagePath: string;
@@ -7,7 +8,16 @@ type Props = {
 export const ImageForm: React.VFC<Props> = (props) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<null | File>(null);
-  // 認証モーダルの開閉
+  const [imagePrevewSrc, setImagePreviewSrc] = useState("");
+
+  useEffect(() => {
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      setImagePreviewSrc(fileReader.result ? fileReader.result.toString() : "");
+    };
+    selectedImage && fileReader.readAsDataURL(selectedImage);
+  }, [selectedImage]);
+
   const handleOpenModal = useCallback(() => {
     setIsOpenModal(true);
   }, []);
@@ -15,23 +25,29 @@ export const ImageForm: React.VFC<Props> = (props) => {
     setIsOpenModal(false);
   }, []);
 
-  const handleChangeImage = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     handleOpenModal();
-    console.log(e);
+    setSelectedImage(e.currentTarget.files ? e.currentTarget.files[0] : null);
 
-    // selectedImage(e.target.files[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 画像のアップロード関数
-  const handleUploadProfileImage = useCallback(async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleUploadProfileImage = useCallback(async () => {
+    const toastId = toast.loading("アップロード中");
+    try {
+      toast.success("プロフィール画像を変更しました", { id: toastId });
+    } catch (error) {
+      toast.error("画像のアップロードに失敗しました", { id: toastId });
+      console.error(error);
+    }
+
     return;
   }, []);
 
   return (
     <div className="w-1/3">
-      <form className="block" onSubmit={handleUploadProfileImage}>
+      <form className="block">
         <label className="block">
           <input type="file" className="hidden" onChange={handleChangeImage} />
           <img
@@ -39,7 +55,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
             className="block overflow-hidden mx-auto rounded-full cursor-pointer"
             alt="Profile"
           />
-          <button className="block mx-auto mt-2 text-sm text-gray-600">変更する</button>
+          <span className="block mt-2 text-sm text-center text-gray-600">変更する</span>
         </label>
       </form>
       <Transition appear show={isOpenModal} as="div">
@@ -73,18 +89,23 @@ export const ImageForm: React.VFC<Props> = (props) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="p-6 w-80 bg-white rounded">
+              <div className="overflow-hidden p-6 m-auto w-80 sm:w-96 bg-white rounded-lg shadow-xl transition-all transform">
                 <Dialog.Title as="h3" className="text-2xl font-bold text-center text-gray-900">
                   プロフィール画像を変更
                 </Dialog.Title>
 
                 <img
-                  src=""
+                  src={imagePrevewSrc}
                   alt=""
                   className="block object-cover overflow-hidden my-4 mx-auto w-20 h-20 rounded-full"
                 />
 
-                <button className="block py-2 px-8 mx-auto rounded-sm border">更新する</button>
+                <button
+                  onClick={handleUploadProfileImage}
+                  className="block py-2 px-8 mx-auto rounded-sm border"
+                >
+                  更新する
+                </button>
               </div>
             </Transition.Child>
           </div>
