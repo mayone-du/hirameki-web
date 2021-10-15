@@ -8,6 +8,7 @@ import { userInfoVar } from "src/graphql/apollo/cache";
 import { useGetUserSettingsLazyQuery } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
 import { ImageForm } from "src/pages/settings/components/ImageForm";
+import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
 type FormInputs = {
   profileName: string;
@@ -62,13 +63,16 @@ const SettingsIndexPage: CustomNextPage = () => {
           <h2 className="py-4 text-2xl font-bold text-center">Settings</h2>
 
           <div className="flex mx-auto md:w-3/4 lg:w-3/5">
-            <ImageForm
-              profileImagePath={
-                data?.user?.relatedUser?.profileImage
-                  ? data.user.relatedUser.profileImage
-                  : data?.user?.relatedUser?.googleImageUrl ?? ""
-              }
-            />
+            {data && (
+              <ImageForm
+                profileId={data?.user?.relatedUser?.id ?? ""}
+                profileImagePath={
+                  data?.user?.relatedUser?.profileImage
+                    ? `${MEDIAFILE_API_ENDPOINT}${data.user.relatedUser.profileImage}`
+                    : data?.user?.relatedUser?.googleImageUrl ?? ""
+                }
+              />
+            )}
 
             {/* プロフィール画像以外 */}
             <form className="block w-2/3" onSubmit={handleSubmit(onSubmit)}>

@@ -1,15 +1,21 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useUpdateProfileMutation } from "src/graphql/schemas/schema";
 
 type Props = {
+  profileId: string;
   profileImagePath: string;
 };
 export const ImageForm: React.VFC<Props> = (props) => {
+  // モーダルの開閉、選択されている画像、プレビュー画像などのstate
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<null | File>(null);
   const [imagePrevewSrc, setImagePreviewSrc] = useState("");
 
+  const [mutation] = useUpdateProfileMutation();
+
+  // 選択されている画像が変わるたびに呼ばれる
   useEffect(() => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -25,6 +31,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
     setIsOpenModal(false);
   }, []);
 
+  // 画像を変更したときに呼ばれる
   const handleChangeImage = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     handleOpenModal();
     setSelectedImage(e.currentTarget.files ? e.currentTarget.files[0] : null);
@@ -35,15 +42,28 @@ export const ImageForm: React.VFC<Props> = (props) => {
   // 画像のアップロード関数
   const handleUploadProfileImage = useCallback(async () => {
     const toastId = toast.loading("アップロード中");
+
     try {
+      const { errors } = await mutation({
+        variables: {
+          profileId: props.profileId,
+          profileImage: selectedImage,
+        },
+      });
+
+      if (errors) {
+        throw errors;
+      }
+      setSelectedImage(null);
+      setImagePreviewSrc("");
+      handleCloseModal();
       toast.success("プロフィール画像を変更しました", { id: toastId });
     } catch (error) {
       toast.error("画像のアップロードに失敗しました", { id: toastId });
       console.error(error);
     }
-
-    return;
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedImage]);
 
   return (
     <div className="w-1/3">
