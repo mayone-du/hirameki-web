@@ -15,6 +15,7 @@ import { GetAllUsersDocument, GetUserDocument } from "src/graphql/schemas/schema
 import { Layout } from "src/layouts";
 import { EditProfileButton, FollowButton } from "src/pages/users/components";
 import { FollowerPopover } from "src/pages/users/components/FollowerPopover";
+import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
 // 各ユーザーのIDを取得
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -67,7 +68,7 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
               src={
                 // プロフィール画像を設定していなければGoogleアカウントの画像を表示
                 props.user?.relatedUser?.profileImage
-                  ? props.user.relatedUser.profileImage
+                  ? `${MEDIAFILE_API_ENDPOINT}${props.user.relatedUser.profileImage}`
                   : props.user?.relatedUser?.googleImageUrl ?? ""
               }
               alt="Profile Icon"
