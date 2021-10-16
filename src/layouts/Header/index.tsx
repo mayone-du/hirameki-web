@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/client";
 import { memo, useCallback } from "react";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { useAuthModal } from "src/libs/hooks/useAuthModal";
+import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 import { HEADER_MENUS } from "src/utils/menus";
 
 export const Header: React.VFC = memo(() => {
@@ -18,12 +19,12 @@ export const Header: React.VFC = memo(() => {
 
   const PROFILE_MENU_ITEMS = [
     {
-      label: "Settings",
-      href: "/settings",
+      label: "Dashboard",
+      href: "/dashboard",
     },
     {
-      label: "My Ideas",
-      href: "/",
+      label: "Settings",
+      href: "/settings",
     },
   ];
 
@@ -120,7 +121,7 @@ export const Header: React.VFC = memo(() => {
                             <img
                               src={
                                 userInfo.profileImage
-                                  ? userInfo.profileImage
+                                  ? `${MEDIAFILE_API_ENDPOINT}${userInfo.profileImage}`
                                   : session?.user?.image ?? ""
                               }
                               className="block object-cover"
@@ -135,9 +136,9 @@ export const Header: React.VFC = memo(() => {
                                 <Popover.Button className="block w-full text-left">
                                   <Link href={`/users/${userInfo.userId}`}>
                                     <a className="block py-2 px-4 hover:bg-gray-200 transition-colors duration-300">
-                                      <span className="block">{userInfo.profileName}</span>
+                                      <span className="block">マイページ</span>
                                       <span className="block text-xs text-gray-400">
-                                        @{userInfo.userId}
+                                        @{userInfo.profileName}
                                       </span>
                                     </a>
                                   </Link>

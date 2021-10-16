@@ -11,6 +11,7 @@ import type {
 import { GetAllIdeasDocument, GetIdeaDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
 import { IdeaPreview } from "src/pages/ideas/components/IdeaPreview";
+import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
 // 各アイデアのIDを取得
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -87,7 +88,34 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
 
         {/* サイドバー */}
         <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
-          いいねの数: {props.idea?.likedIdea.edges.length.toString()}
+          <div className="flex items-center">
+            {props.idea?.topics.edges.length === 0 && <p>トピックはありません</p>}
+            {props.idea?.topics.edges.map((topic, index) => {
+              return (
+                <div key={index.toString()} className="border">
+                  {topic?.node?.name}
+                </div>
+              );
+            })}
+          </div>
+
+          <div>
+            <div className="flex items-center">
+              <img
+                className="block object-cover overflow-hidden w-14 h-14 rounded-full"
+                src={
+                  props.idea?.ideaCreator.relatedUser?.profileImage
+                    ? `${MEDIAFILE_API_ENDPOINT}${props.idea.ideaCreator.relatedUser.profileImage}`
+                    : props.idea?.ideaCreator.relatedUser?.googleImageUrl ?? ""
+                }
+                alt=""
+              />
+              <div>{props.idea?.ideaCreator.relatedUser?.profileName}</div>
+            </div>
+            <p>{props.idea?.ideaCreator.relatedUser?.selfIntroduction}</p>
+          </div>
+
+          <div>いいねの数: {props.idea?.likedIdea.edges.length.toString()}</div>
         </aside>
       </div>
     </>

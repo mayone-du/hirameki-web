@@ -650,6 +650,8 @@ export type Query = {
   allUsers?: Maybe<UserNodeConnection>;
   idea?: Maybe<IdeaNode>;
   memo?: Maybe<MemoNode>;
+  myAllIdeas?: Maybe<IdeaNodeConnection>;
+  myAllMemos?: Maybe<MemoNodeConnection>;
   myFollowings?: Maybe<FollowNodeConnection>;
   myUserInfo?: Maybe<UserNode>;
   user?: Maybe<UserNode>;
@@ -734,6 +736,34 @@ export type QueryIdeaArgs = {
 
 export type QueryMemoArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryMyAllIdeasArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  content_Icontains?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  ideaCreator?: Maybe<Scalars['ID']>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryMyAllMemosArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  memoCreator?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
 };
 
 
@@ -1405,6 +1435,32 @@ export type GetIndexPageItemsQuery = (
   )> }
 );
 
+export type GetMyAllPostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyAllPostsQuery = (
+  { __typename?: 'Query' }
+  & { myAllIdeas?: Maybe<(
+    { __typename?: 'IdeaNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'IdeaNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'IdeaNode' }
+        & Pick<IdeaNode, 'id' | 'title' | 'isPublished' | 'createdAt'>
+      )> }
+    )>> }
+  )>, myAllMemos?: Maybe<(
+    { __typename?: 'MemoNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'MemoNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'MemoNode' }
+        & Pick<MemoNode, 'id' | 'title' | 'isPublished' | 'createdAt'>
+      )> }
+    )>> }
+  )> }
+);
+
 export type GetAllIdeasQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1454,7 +1510,7 @@ export type GetIdeaQuery = (
       & Pick<UserNode, 'id'>
       & { relatedUser?: Maybe<(
         { __typename?: 'ProfileNode' }
-        & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
+        & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl' | 'selfIntroduction' | 'githubUsername' | 'twitterUsername' | 'websiteUrl'>
       )> }
     ), likedIdea: (
       { __typename?: 'LikeNodeConnection' }
@@ -2029,6 +2085,57 @@ export function useGetIndexPageItemsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetIndexPageItemsQueryHookResult = ReturnType<typeof useGetIndexPageItemsQuery>;
 export type GetIndexPageItemsLazyQueryHookResult = ReturnType<typeof useGetIndexPageItemsLazyQuery>;
 export type GetIndexPageItemsQueryResult = Apollo.QueryResult<GetIndexPageItemsQuery, GetIndexPageItemsQueryVariables>;
+export const GetMyAllPostsDocument = gql`
+    query GetMyAllPosts {
+  myAllIdeas {
+    edges {
+      node {
+        id
+        title
+        isPublished
+        createdAt
+      }
+    }
+  }
+  myAllMemos {
+    edges {
+      node {
+        id
+        title
+        isPublished
+        createdAt
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyAllPostsQuery__
+ *
+ * To run a query within a React component, call `useGetMyAllPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyAllPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyAllPostsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyAllPostsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyAllPostsQuery, GetMyAllPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyAllPostsQuery, GetMyAllPostsQueryVariables>(GetMyAllPostsDocument, options);
+      }
+export function useGetMyAllPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyAllPostsQuery, GetMyAllPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyAllPostsQuery, GetMyAllPostsQueryVariables>(GetMyAllPostsDocument, options);
+        }
+export type GetMyAllPostsQueryHookResult = ReturnType<typeof useGetMyAllPostsQuery>;
+export type GetMyAllPostsLazyQueryHookResult = ReturnType<typeof useGetMyAllPostsLazyQuery>;
+export type GetMyAllPostsQueryResult = Apollo.QueryResult<GetMyAllPostsQuery, GetMyAllPostsQueryVariables>;
 export const GetAllIdeasDocument = gql`
     query GetAllIdeas {
   allIdeas(isPublished: true) {
@@ -2101,6 +2208,10 @@ export const GetIdeaDocument = gql`
         profileName
         profileImage
         googleImageUrl
+        selfIntroduction
+        githubUsername
+        twitterUsername
+        websiteUrl
       }
     }
     likedIdea {

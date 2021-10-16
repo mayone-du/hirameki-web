@@ -34,7 +34,7 @@ const SettingsIndexPage: CustomNextPage = () => {
         <div>
           <h2 className="py-4 text-2xl font-bold text-center">Settings</h2>
 
-          <div className="flex mx-auto md:w-3/4 lg:w-3/5">
+          <div className="md:flex mx-auto md:w-3/4 lg:w-3/5">
             {data && (
               <ImageForm
                 profileId={data?.user?.relatedUser?.id ?? ""}

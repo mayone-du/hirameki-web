@@ -66,7 +66,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
   }, [selectedImage]);
 
   return (
-    <div className="w-1/3">
+    <div className="md:pr-4 md:w-1/3">
       <form className="block">
         <label className="block">
           <input
@@ -77,7 +77,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
           />
           <img
             src={props.profileImagePath}
-            className="block overflow-hidden mx-auto rounded-full cursor-pointer"
+            className="block overflow-hidden mx-auto w-full rounded-full cursor-pointer"
             alt="Profile"
           />
           <span className="block mt-2 text-sm text-center text-gray-600 cursor-pointer">

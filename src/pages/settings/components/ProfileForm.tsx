@@ -1,6 +1,8 @@
+import { useReactiveVar } from "@apollo/client";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { userInfoVar } from "src/graphql/apollo/cache";
 import type { GetUserSettingsQuery } from "src/graphql/schemas/schema";
 import { useUpdateProfileMutation } from "src/graphql/schemas/schema";
 
@@ -13,11 +15,13 @@ type FormInputs = {
 };
 
 export const ProfileForm: React.VFC<GetUserSettingsQuery> = (props) => {
+  const userInfo = useReactiveVar(userInfoVar);
   const {
     register,
     formState: { errors },
     setValue,
     handleSubmit,
+    getValues,
   } = useForm<FormInputs>();
   const [mutation, { loading: isLoading }] = useUpdateProfileMutation();
 
@@ -44,6 +48,11 @@ export const ProfileForm: React.VFC<GetUserSettingsQuery> = (props) => {
       if (errors) {
         throw errors;
       }
+
+      userInfoVar({
+        ...userInfo,
+        profileName: getValues("profileName"),
+      });
       toast.success("プロフィールを更新しました", { id: toastId });
     } catch (error) {
       toast.error("プロフィールの更新に失敗しました", { id: toastId });
@@ -53,7 +62,7 @@ export const ProfileForm: React.VFC<GetUserSettingsQuery> = (props) => {
   }, []);
 
   return (
-    <form className="block w-2/3" onSubmit={handleSubmit(onSubmit)}>
+    <form className="block md:pl-4 md:w-2/3" onSubmit={handleSubmit(onSubmit)}>
       <label className="block">
         表示名
         <input

@@ -20,6 +20,10 @@ query GetIdea($id: ID!) {
         profileName
         profileImage
         googleImageUrl
+        selfIntroduction
+        githubUsername
+        twitterUsername
+        websiteUrl
       }
     }
     likedIdea {

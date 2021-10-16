@@ -1,0 +1,22 @@
+query GetMyAllPosts {
+  myAllIdeas {
+    edges {
+      node {
+        id
+        title
+        isPublished
+        createdAt
+      }
+    }
+  }
+  myAllMemos {
+    edges {
+      node {
+        id
+        title
+        isPublished
+        createdAt
+      }
+    }
+  }
+}
