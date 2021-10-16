@@ -4,6 +4,15 @@ query GetIdea($id: ID!) {
     title
     content
     createdAt
+    updatedAt
+    topics {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
     ideaCreator {
       id
       relatedUser {
@@ -11,6 +20,42 @@ query GetIdea($id: ID!) {
         profileName
         profileImage
         googleImageUrl
+      }
+    }
+    likedIdea {
+      edges {
+        node {
+          id
+          likedUser {
+            id
+          }
+        }
+      }
+    }
+    targetIdea {
+      edges {
+        node {
+          id
+          targetThread {
+            edges {
+              node {
+                id
+                content
+                createdAt
+                updatedAt
+                commentor {
+                  id
+                  relatedUser {
+                    id
+                    profileName
+                    profileImage
+                    googleImageUrl
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

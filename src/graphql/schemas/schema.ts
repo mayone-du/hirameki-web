@@ -1439,14 +1439,63 @@ export type GetIdeaQuery = (
   { __typename?: 'Query' }
   & { idea?: Maybe<(
     { __typename?: 'IdeaNode' }
-    & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt'>
-    & { ideaCreator: (
+    & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt'>
+    & { topics: (
+      { __typename?: 'TopicNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'TopicNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'TopicNode' }
+          & Pick<TopicNode, 'id' | 'name'>
+        )> }
+      )>> }
+    ), ideaCreator: (
       { __typename?: 'UserNode' }
       & Pick<UserNode, 'id'>
       & { relatedUser?: Maybe<(
         { __typename?: 'ProfileNode' }
         & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
       )> }
+    ), likedIdea: (
+      { __typename?: 'LikeNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'LikeNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'LikeNode' }
+          & Pick<LikeNode, 'id'>
+          & { likedUser: (
+            { __typename?: 'UserNode' }
+            & Pick<UserNode, 'id'>
+          ) }
+        )> }
+      )>> }
+    ), targetIdea: (
+      { __typename?: 'ThreadNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'ThreadNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'ThreadNode' }
+          & Pick<ThreadNode, 'id'>
+          & { targetThread: (
+            { __typename?: 'CommentNodeConnection' }
+            & { edges: Array<Maybe<(
+              { __typename?: 'CommentNodeEdge' }
+              & { node?: Maybe<(
+                { __typename?: 'CommentNode' }
+                & Pick<CommentNode, 'id' | 'content' | 'createdAt' | 'updatedAt'>
+                & { commentor: (
+                  { __typename?: 'UserNode' }
+                  & Pick<UserNode, 'id'>
+                  & { relatedUser?: Maybe<(
+                    { __typename?: 'ProfileNode' }
+                    & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl'>
+                  )> }
+                ) }
+              )> }
+            )>> }
+          ) }
+        )> }
+      )>> }
     ) }
   )> }
 );
@@ -2036,6 +2085,15 @@ export const GetIdeaDocument = gql`
     title
     content
     createdAt
+    updatedAt
+    topics {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
     ideaCreator {
       id
       relatedUser {
@@ -2043,6 +2101,42 @@ export const GetIdeaDocument = gql`
         profileName
         profileImage
         googleImageUrl
+      }
+    }
+    likedIdea {
+      edges {
+        node {
+          id
+          likedUser {
+            id
+          }
+        }
+      }
+    }
+    targetIdea {
+      edges {
+        node {
+          id
+          targetThread {
+            edges {
+              node {
+                id
+                content
+                createdAt
+                updatedAt
+                commentor {
+                  id
+                  relatedUser {
+                    id
+                    profileName
+                    profileImage
+                    googleImageUrl
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

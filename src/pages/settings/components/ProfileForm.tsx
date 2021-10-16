@@ -19,7 +19,7 @@ export const ProfileForm: React.VFC<GetUserSettingsQuery> = (props) => {
     setValue,
     handleSubmit,
   } = useForm<FormInputs>();
-  const [mutation] = useUpdateProfileMutation();
+  const [mutation, { loading: isLoading }] = useUpdateProfileMutation();
 
   useEffect(() => {
     setValue("profileName", props.user?.relatedUser?.profileName ?? "asdfds");
@@ -105,7 +105,7 @@ export const ProfileForm: React.VFC<GetUserSettingsQuery> = (props) => {
         />
       </label>
 
-      <button type="submit" className="block p-2 mx-auto rounded border">
+      <button type="submit" className="block p-2 mx-auto rounded border" disabled={isLoading}>
         更新
       </button>
     </form>

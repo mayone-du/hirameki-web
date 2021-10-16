@@ -13,7 +13,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
   const [selectedImage, setSelectedImage] = useState<null | File>(null);
   const [imagePrevewSrc, setImagePreviewSrc] = useState("");
 
-  const [mutation] = useUpdateProfileMutation();
+  const [mutation, { loading: isLoading }] = useUpdateProfileMutation();
 
   // 選択されている画像が変わるたびに呼ばれる
   useEffect(() => {
@@ -69,7 +69,12 @@ export const ImageForm: React.VFC<Props> = (props) => {
     <div className="w-1/3">
       <form className="block">
         <label className="block">
-          <input type="file" className="hidden" onChange={handleChangeImage} />
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleChangeImage}
+            accept=".jpg, jpeg, .png"
+          />
           <img
             src={props.profileImagePath}
             className="block overflow-hidden mx-auto rounded-full cursor-pointer"
@@ -116,6 +121,10 @@ export const ImageForm: React.VFC<Props> = (props) => {
                   プロフィール画像を変更
                 </Dialog.Title>
 
+                <p className="mt-4 text-sm text-gray-500">
+                  選択された画像のサイズ:{selectedImage?.size}
+                </p>
+
                 <img
                   src={imagePrevewSrc}
                   alt=""
@@ -125,6 +134,7 @@ export const ImageForm: React.VFC<Props> = (props) => {
                 <button
                   onClick={handleUploadProfileImage}
                   className="block py-2 px-8 mx-auto rounded-sm border"
+                  disabled={isLoading}
                 >
                   更新する
                 </button>

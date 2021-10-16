@@ -64,10 +64,31 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
           <div className="bg-red-50">
             <IdeaPreview markdown={props.idea?.content ?? ""} />
           </div>
+
+          {/* コメント */}
+          <div>
+            {props.idea?.targetIdea.edges.length === 0 ? (
+              <div>コメントはありません</div>
+            ) : (
+              <div>
+                {props.idea?.targetIdea.edges.map((thread, threadIndex) => {
+                  <li key={threadIndex.toString()}>
+                    {thread?.node?.targetThread.edges.map((comment, commentIndex) => {
+                      <div key={commentIndex.toString()} className="bg-blue-100">
+                        {comment?.node?.content}
+                      </div>;
+                    })}
+                  </li>;
+                })}
+              </div>
+            )}
+          </div>
         </article>
 
         {/* サイドバー */}
-        <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">aside</aside>
+        <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
+          いいねの数: {props.idea?.likedIdea.edges.length.toString()}
+        </aside>
       </div>
     </>
   );
