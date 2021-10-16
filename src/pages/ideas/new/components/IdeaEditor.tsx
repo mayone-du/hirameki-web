@@ -3,7 +3,7 @@ import "easymde/dist/easymde.min.css";
 import type EasyMDE from "easymde";
 import { useCallback, useMemo, useState } from "react";
 import { SimpleMdeReact } from "react-simplemde-editor";
-import { IdeaPreview } from "src/pages/ideas/components/IdeaPreview";
+import { IdeaPreview } from "src/pages/ideas/new/components/IdeaPreview";
 
 export const IdeaEditor = () => {
   const [value, setValue] = useState("Initial value");

@@ -10,7 +10,8 @@ import type {
 } from "src/graphql/schemas/schema";
 import { GetAllIdeasDocument, GetIdeaDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
-import { IdeaPreview } from "src/pages/ideas/components/IdeaPreview";
+import { NewCommentForm } from "src/pages/ideas/components/NewCommentForm";
+import { IdeaPreview } from "src/pages/ideas/new/components/IdeaPreview";
 import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
 // 各アイデアのIDを取得
@@ -47,7 +48,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return { props: data, revalidate: 60 /* 60sec */ };
 };
 
-const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
+// アイデアの詳細ページ
+const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
   const userInfo = useReactiveVar(userInfoVar);
 
   return (
@@ -99,10 +101,7 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
 
           <div>
             <h3 className="mt-4 font-bold">コメントする</h3>
-            <textarea
-              className="block p-2 mb-4 w-full rounded border focus:ring-2 ring-blue-300 transition-all outline-none resize-none"
-              placeholder="アイデアにコメントする"
-            ></textarea>
+            <NewCommentForm ideaId={props.idea?.id ?? ""} />
           </div>
         </article>
 
@@ -142,6 +141,6 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
   );
 };
 
-export default UsersDetailPage;
+export default IdeasDetailPage;
 
-UsersDetailPage.getLayout = Layout;
+IdeasDetailPage.getLayout = Layout;

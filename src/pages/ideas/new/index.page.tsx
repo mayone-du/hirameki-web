@@ -8,7 +8,7 @@ import { Layout } from "src/layouts";
 // IdeaEditorがSSR出来ないため、dynamic importにする
 const IdeaEditor = dynamic(
   async () => {
-    const module = await import("src/pages/ideas/components/IdeaEditor");
+    const module = await import("src/pages/ideas/new/components/IdeaEditor");
     return module.IdeaEditor;
   },
   {

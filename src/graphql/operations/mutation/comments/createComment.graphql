@@ -1,0 +1,7 @@
+mutation CreateComment($targetThreadId: ID!, $content: String!) {
+  createComment(input: { targetThreadId: $targetThreadId, content: $content }) {
+    comment {
+      id
+    }
+  }
+}

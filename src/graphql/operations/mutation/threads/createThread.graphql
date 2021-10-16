@@ -1,0 +1,13 @@
+mutation CreateThread($threadTargetType: String!, $targetIdeaId: ID, $targetMemoId: ID) {
+  createThread(
+    input: {
+      threadTargetType: $threadTargetType
+      targetIdeaId: $targetIdeaId
+      targetMemoId: $targetMemoId
+    }
+  ) {
+    thread {
+      id
+    }
+  }
+}

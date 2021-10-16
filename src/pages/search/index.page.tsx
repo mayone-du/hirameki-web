@@ -38,7 +38,7 @@ const SearchIndexPage: CustomNextPage = () => {
             type="search"
             className="block p-2 border"
             placeholder="Search"
-            {...register("keyword")}
+            {...register("keyword", { required: true, maxLength: 20 })}
           />
         </form>
 

@@ -1268,6 +1268,23 @@ export type UserNodeEdge = {
   node?: Maybe<UserNode>;
 };
 
+export type CreateCommentMutationVariables = Exact<{
+  targetThreadId: Scalars['ID'];
+  content: Scalars['String'];
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment?: Maybe<(
+    { __typename?: 'CreateCommentMutationPayload' }
+    & { comment?: Maybe<(
+      { __typename?: 'CommentNode' }
+      & Pick<CommentNode, 'id'>
+    )> }
+  )> }
+);
+
 export type CreateFollowMutationVariables = Exact<{
   followedUserId: Scalars['ID'];
 }>;
@@ -1378,6 +1395,24 @@ export type SocialAuthMutation = (
           & Pick<ProfileNode, 'id'>
         )> }
       ) }
+    )> }
+  )> }
+);
+
+export type CreateThreadMutationVariables = Exact<{
+  threadTargetType: Scalars['String'];
+  targetIdeaId?: Maybe<Scalars['ID']>;
+  targetMemoId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type CreateThreadMutation = (
+  { __typename?: 'Mutation' }
+  & { createThread?: Maybe<(
+    { __typename?: 'CreateThreadMutationPayload' }
+    & { thread?: Maybe<(
+      { __typename?: 'ThreadNode' }
+      & Pick<ThreadNode, 'id'>
     )> }
   )> }
 );
@@ -1783,6 +1818,42 @@ export type NewNotificationsSubscription = (
 );
 
 
+export const CreateCommentDocument = gql`
+    mutation CreateComment($targetThreadId: ID!, $content: String!) {
+  createComment(input: {targetThreadId: $targetThreadId, content: $content}) {
+    comment {
+      id
+    }
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      targetThreadId: // value for 'targetThreadId'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreateFollowDocument = gql`
     mutation CreateFollow($followedUserId: ID!) {
   createFollow(input: {followedUserId: $followedUserId}) {
@@ -2015,6 +2086,45 @@ export function useSocialAuthMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SocialAuthMutationHookResult = ReturnType<typeof useSocialAuthMutation>;
 export type SocialAuthMutationResult = Apollo.MutationResult<SocialAuthMutation>;
 export type SocialAuthMutationOptions = Apollo.BaseMutationOptions<SocialAuthMutation, SocialAuthMutationVariables>;
+export const CreateThreadDocument = gql`
+    mutation CreateThread($threadTargetType: String!, $targetIdeaId: ID, $targetMemoId: ID) {
+  createThread(
+    input: {threadTargetType: $threadTargetType, targetIdeaId: $targetIdeaId, targetMemoId: $targetMemoId}
+  ) {
+    thread {
+      id
+    }
+  }
+}
+    `;
+export type CreateThreadMutationFn = Apollo.MutationFunction<CreateThreadMutation, CreateThreadMutationVariables>;
+
+/**
+ * __useCreateThreadMutation__
+ *
+ * To run a mutation, you first call `useCreateThreadMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateThreadMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createThreadMutation, { data, loading, error }] = useCreateThreadMutation({
+ *   variables: {
+ *      threadTargetType: // value for 'threadTargetType'
+ *      targetIdeaId: // value for 'targetIdeaId'
+ *      targetMemoId: // value for 'targetMemoId'
+ *   },
+ * });
+ */
+export function useCreateThreadMutation(baseOptions?: Apollo.MutationHookOptions<CreateThreadMutation, CreateThreadMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateThreadMutation, CreateThreadMutationVariables>(CreateThreadDocument, options);
+      }
+export type CreateThreadMutationHookResult = ReturnType<typeof useCreateThreadMutation>;
+export type CreateThreadMutationResult = Apollo.MutationResult<CreateThreadMutation>;
+export type CreateThreadMutationOptions = Apollo.BaseMutationOptions<CreateThreadMutation, CreateThreadMutationVariables>;
 export const GetMyFollowingsDocument = gql`
     query GetMyFollowings {
   myFollowings {
