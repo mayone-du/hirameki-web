@@ -54,7 +54,7 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
     <>
       <NextSeo title={props.idea?.title ?? "アイデア"} />
 
-      <div className="flex">
+      <div className="md:flex">
         <article className="p-2 md:mr-4 md:w-2/3 rounded-xl border">
           <div>{props.idea?.ideaCreator.id === userInfo.userId && "自分のアイデアです"}</div>
 
@@ -67,22 +67,42 @@ const UsersDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
           </div>
 
           {/* コメント */}
-          <div>
+          <div className="bg-yellow-200">
             {props.idea?.targetIdea.edges.length === 0 ? (
               <div>コメントはありません</div>
             ) : (
               <div>
                 {props.idea?.targetIdea.edges.map((thread, threadIndex) => {
-                  <li key={threadIndex.toString()}>
-                    {thread?.node?.targetThread.edges.map((comment, commentIndex) => {
-                      <div key={commentIndex.toString()} className="bg-blue-100">
-                        {comment?.node?.content}
-                      </div>;
-                    })}
-                  </li>;
+                  return (
+                    <div key={threadIndex.toString()} className="p-2 my-2 border border-red-200">
+                      <div>
+                        {thread?.node?.targetThread.edges.map((comment, commentIndex) => {
+                          return (
+                            <div
+                              key={commentIndex.toString()}
+                              className="p-2 bg-blue-100 border border-gray-500"
+                            >
+                              <p>{comment?.node?.content}</p>
+                            </div>
+                          );
+                        })}
+                        <button className="block p-2 bg-blue-300 rounded border">
+                          コメントを追加
+                        </button>
+                      </div>
+                    </div>
+                  );
                 })}
               </div>
             )}
+          </div>
+
+          <div>
+            <h3 className="mt-4 font-bold">コメントする</h3>
+            <textarea
+              className="block p-2 mb-4 w-full rounded border focus:ring-2 ring-blue-300 transition-all outline-none resize-none"
+              placeholder="アイデアにコメントする"
+            ></textarea>
           </div>
         </article>
 

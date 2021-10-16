@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { Layout } from "src/layouts";
 
+// 非ログインユーザーがダッシュボードページなどへアクセスした場合にリダイレクトされるページ
 const EnterIndexPage: CustomNextPage = () => {
   const userInfo = useReactiveVar(userInfoVar);
   const router = useRouter();

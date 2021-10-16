@@ -12,21 +12,11 @@ query GetUser($id: ID!) {
       twitterUsername
       websiteUrl
     }
-    followingUser {
+    followedUser(isFollowing: true) {
       edges {
         node {
-          followedUser {
-            id
-            relatedUser {
-              profileName
-            }
-          }
-        }
-      }
-    }
-    followedUser {
-      edges {
-        node {
+          id
+          isFollowing
           followingUser {
             id
             relatedUser {

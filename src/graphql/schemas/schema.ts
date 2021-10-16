@@ -641,12 +641,30 @@ export type ProfileNode = Node & {
   websiteUrl?: Maybe<Scalars['String']>;
 };
 
+export type ProfileNodeConnection = {
+  __typename?: 'ProfileNodeConnection';
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<ProfileNodeEdge>>;
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+};
+
+/** A Relay edge containing a `ProfileNode` and its cursor. */
+export type ProfileNodeEdge = {
+  __typename?: 'ProfileNodeEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
+  /** The item at the end of the edge */
+  node?: Maybe<ProfileNode>;
+};
+
 export type Query = {
   __typename?: 'Query';
   allAnnounce?: Maybe<AnnounceNodeConnection>;
   allIdeas?: Maybe<IdeaNodeConnection>;
   allMemos?: Maybe<MemoNodeConnection>;
   allMyNotifications?: Maybe<NotificationNodeConnection>;
+  allProfiles?: Maybe<ProfileNodeConnection>;
   allUsers?: Maybe<UserNodeConnection>;
   idea?: Maybe<IdeaNode>;
   memo?: Maybe<MemoNode>;
@@ -710,6 +728,25 @@ export type QueryAllMyNotificationsArgs = {
   notificationType?: Maybe<Scalars['String']>;
   notificator?: Maybe<Scalars['ID']>;
   offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryAllProfilesArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  githubUsername?: Maybe<Scalars['String']>;
+  githubUsername_Icontains?: Maybe<Scalars['String']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  profileName?: Maybe<Scalars['String']>;
+  profileName_Icontains?: Maybe<Scalars['String']>;
+  selfIntroduction?: Maybe<Scalars['String']>;
+  selfIntroduction_Icontains?: Maybe<Scalars['String']>;
+  twitterUsername?: Maybe<Scalars['String']>;
+  twitterUsername_Icontains?: Maybe<Scalars['String']>;
+  websiteUrl?: Maybe<Scalars['String']>;
+  websiteUrl_Icontains?: Maybe<Scalars['String']>;
 };
 
 
@@ -1556,6 +1593,43 @@ export type GetIdeaQuery = (
   )> }
 );
 
+export type SearchItemsQueryVariables = Exact<{
+  keyword: Scalars['String'];
+}>;
+
+
+export type SearchItemsQuery = (
+  { __typename?: 'Query' }
+  & { allIdeas?: Maybe<(
+    { __typename?: 'IdeaNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'IdeaNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'IdeaNode' }
+        & Pick<IdeaNode, 'id' | 'title'>
+      )> }
+    )>> }
+  )>, allMemos?: Maybe<(
+    { __typename?: 'MemoNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'MemoNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'MemoNode' }
+        & Pick<MemoNode, 'id' | 'title'>
+      )> }
+    )>> }
+  )>, allProfiles?: Maybe<(
+    { __typename?: 'ProfileNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'ProfileNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'ProfileNode' }
+        & Pick<ProfileNode, 'id' | 'profileName'>
+      )> }
+    )>> }
+  )> }
+);
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1605,28 +1679,13 @@ export type GetUserQuery = (
     & { relatedUser?: Maybe<(
       { __typename?: 'ProfileNode' }
       & Pick<ProfileNode, 'id' | 'profileName' | 'profileImage' | 'googleImageUrl' | 'selfIntroduction' | 'githubUsername' | 'twitterUsername' | 'websiteUrl'>
-    )>, followingUser: (
+    )>, followedUser: (
       { __typename?: 'FollowNodeConnection' }
       & { edges: Array<Maybe<(
         { __typename?: 'FollowNodeEdge' }
         & { node?: Maybe<(
           { __typename?: 'FollowNode' }
-          & { followedUser: (
-            { __typename?: 'UserNode' }
-            & Pick<UserNode, 'id'>
-            & { relatedUser?: Maybe<(
-              { __typename?: 'ProfileNode' }
-              & Pick<ProfileNode, 'profileName'>
-            )> }
-          ) }
-        )> }
-      )>> }
-    ), followedUser: (
-      { __typename?: 'FollowNodeConnection' }
-      & { edges: Array<Maybe<(
-        { __typename?: 'FollowNodeEdge' }
-        & { node?: Maybe<(
-          { __typename?: 'FollowNode' }
+          & Pick<FollowNode, 'id' | 'isFollowing'>
           & { followingUser: (
             { __typename?: 'UserNode' }
             & Pick<UserNode, 'id'>
@@ -2281,6 +2340,62 @@ export function useGetIdeaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetIdeaQueryHookResult = ReturnType<typeof useGetIdeaQuery>;
 export type GetIdeaLazyQueryHookResult = ReturnType<typeof useGetIdeaLazyQuery>;
 export type GetIdeaQueryResult = Apollo.QueryResult<GetIdeaQuery, GetIdeaQueryVariables>;
+export const SearchItemsDocument = gql`
+    query SearchItems($keyword: String!) {
+  allIdeas(title_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+  allMemos(title_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+  allProfiles(profileName_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        profileName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchItemsQuery__
+ *
+ * To run a query within a React component, call `useSearchItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchItemsQuery({
+ *   variables: {
+ *      keyword: // value for 'keyword'
+ *   },
+ * });
+ */
+export function useSearchItemsQuery(baseOptions: Apollo.QueryHookOptions<SearchItemsQuery, SearchItemsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchItemsQuery, SearchItemsQueryVariables>(SearchItemsDocument, options);
+      }
+export function useSearchItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchItemsQuery, SearchItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchItemsQuery, SearchItemsQueryVariables>(SearchItemsDocument, options);
+        }
+export type SearchItemsQueryHookResult = ReturnType<typeof useSearchItemsQuery>;
+export type SearchItemsLazyQueryHookResult = ReturnType<typeof useSearchItemsLazyQuery>;
+export type SearchItemsQueryResult = Apollo.QueryResult<SearchItemsQuery, SearchItemsQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   allUsers(isSuperuser: false, isActive: true) {
@@ -2378,21 +2493,11 @@ export const GetUserDocument = gql`
       twitterUsername
       websiteUrl
     }
-    followingUser {
+    followedUser(isFollowing: true) {
       edges {
         node {
-          followedUser {
-            id
-            relatedUser {
-              profileName
-            }
-          }
-        }
-      }
-    }
-    followedUser {
-      edges {
-        node {
+          id
+          isFollowing
           followingUser {
             id
             relatedUser {

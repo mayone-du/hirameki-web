@@ -1,0 +1,26 @@
+query SearchItems($keyword: String!) {
+  allIdeas(title_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+  allMemos(title_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+  allProfiles(profileName_Icontains: $keyword) {
+    edges {
+      node {
+        id
+        profileName
+      }
+    }
+  }
+}
