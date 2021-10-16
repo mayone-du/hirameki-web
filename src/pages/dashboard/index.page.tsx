@@ -21,8 +21,8 @@ const DashboradIndexPage: CustomNextPage = () => {
 
       <div>
         {data?.myAllIdeas?.edges.length === 0 && <div>アイデアはまだありません</div>}
-        {data?.myAllIdeas?.edges.map((idea, index) => {
-          return <div key={index.toString()}>{idea?.node?.title}</div>;
+        {data?.myAllIdeas?.edges.map((idea) => {
+          return <div key={idea?.node?.id}>{idea?.node?.title}</div>;
         })}
       </div>
     </>

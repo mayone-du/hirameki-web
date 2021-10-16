@@ -49,9 +49,9 @@ export const Header: React.VFC = memo(() => {
         </div>
         <ul className="flex justify-between items-center">
           {/* ヘッダーメニューを事前に定義し、mapで回して表示 */}
-          {HEADER_MENUS.map((menu, index) => {
+          {HEADER_MENUS.map((menu) => {
             return (
-              <li key={index.toString()} className="mx-2">
+              <li key={menu.href} className="mx-2">
                 <Link href={menu.href}>
                   <a>{menu.jsxIcon}</a>
                 </Link>

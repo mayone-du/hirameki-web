@@ -145,9 +145,9 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
         <div>
           アイデア
           <br />
-          {props.user?.ideaCreator.edges.map((idea, index) => {
+          {props.user?.ideaCreator.edges.map((idea) => {
             return (
-              <div className="m-2 bg-green-100" key={index.toString()}>
+              <div className="m-2 bg-green-100" key={idea?.node?.id}>
                 {idea?.node?.title}
                 <br />
                 いいねの数:{idea?.node?.likedIdea.edges.length.toString()}

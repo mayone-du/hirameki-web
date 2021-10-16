@@ -21,9 +21,9 @@ const UsersIndexPage: CustomNextPage<GetAllUsersQuery | undefined> = (props) => 
       <NextSeo title="ユーザー情報一覧" />
 
       <div>
-        {props.allUsers?.edges.map((user, index) => {
+        {props.allUsers?.edges.map((user) => {
           return (
-            <div key={index.toString()} className="p-2 m-2 bg-blue-50 rounded">
+            <div key={user?.node?.id} className="p-2 m-2 bg-blue-50 rounded">
               <Link href={`/users/${user?.node?.id}`}>
                 <a className="block">
                   {user?.node?.relatedUser?.profileName

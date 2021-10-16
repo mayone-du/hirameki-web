@@ -10,9 +10,9 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
         "アイデアはまだありません"
       ) : (
         <ul className="md:grid md:grid-cols-1 lg:grid-cols-2">
-          {props?.allIdeas?.edges.map((idea, index) => {
+          {props?.allIdeas?.edges.map((idea) => {
             return (
-              <li className="p-2 lg:p-4 m-2 rounded-md border shadow" key={index.toString()}>
+              <li className="p-2 lg:p-4 m-2 rounded-md border shadow" key={idea?.node?.id}>
                 <Link href={`/ideas/${idea?.node?.id}`}>
                   <a className="block">
                     <h3 className="text-lg font-bold">{idea?.node?.title}</h3>

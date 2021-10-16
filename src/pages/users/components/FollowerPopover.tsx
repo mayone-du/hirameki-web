@@ -20,7 +20,7 @@ export const FollowerPopover: React.VFC<GetUserQuery> = memo((props) => {
                 <ul>
                   {props.user?.followedUser.edges.map((user, index) => {
                     return (
-                      <li key={index.toString()}>
+                      <li key={user?.node?.id}>
                         <Popover.Button className="block w-full text-left">
                           <Link href={`/users/${user?.node?.followingUser.id}`}>
                             <a

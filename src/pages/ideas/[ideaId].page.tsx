@@ -74,14 +74,14 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
               <div>コメントはありません</div>
             ) : (
               <div>
-                {props.idea?.targetIdea.edges.map((thread, threadIndex) => {
+                {props.idea?.targetIdea.edges.map((thread) => {
                   return (
-                    <div key={threadIndex.toString()} className="p-2 my-2 border border-red-200">
+                    <div key={thread?.node?.id} className="p-2 my-2 border border-red-200">
                       <div>
-                        {thread?.node?.targetThread.edges.map((comment, commentIndex) => {
+                        {thread?.node?.targetThread.edges.map((comment) => {
                           return (
                             <div
-                              key={commentIndex.toString()}
+                              key={comment?.node?.id}
                               className="p-2 bg-blue-100 border border-gray-500"
                             >
                               <p>{comment?.node?.content}</p>
@@ -109,9 +109,9 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
         <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
           <div className="flex items-center">
             {props.idea?.topics.edges.length === 0 && <p>トピックはありません</p>}
-            {props.idea?.topics.edges.map((topic, index) => {
+            {props.idea?.topics.edges.map((topic) => {
               return (
-                <div key={index.toString()} className="border">
+                <div key={topic?.node?.id} className="border">
                   {topic?.node?.name}
                 </div>
               );

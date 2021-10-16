@@ -45,22 +45,22 @@ const SearchIndexPage: CustomNextPage = () => {
         <div className="flex justify-around">
           <div>
             idea
-            {data?.allIdeas?.edges.map((idea, index) => {
-              return <div key={index.toString()}>{idea?.node?.title}</div>;
+            {data?.allIdeas?.edges.map((idea) => {
+              return <div key={idea?.node?.id}>{idea?.node?.title}</div>;
             })}
           </div>
 
           <div>
             memo
-            {data?.allMemos?.edges.map((memo, index) => {
-              return <div key={index.toString()}>{memo?.node?.title}</div>;
+            {data?.allMemos?.edges.map((memo) => {
+              return <div key={memo?.node?.id}>{memo?.node?.title}</div>;
             })}
           </div>
 
           <div>
             profiles
-            {data?.allProfiles?.edges.map((profile, index) => {
-              return <div key={index.toString()}>{profile?.node?.profileName}</div>;
+            {data?.allProfiles?.edges.map((profile) => {
+              return <div key={profile?.node?.id}>{profile?.node?.profileName}</div>;
             })}
           </div>
         </div>

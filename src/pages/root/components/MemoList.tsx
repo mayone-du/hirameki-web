@@ -9,9 +9,9 @@ export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
         "メモはまだありません"
       ) : (
         <ul className="md:grid md:grid-cols-1 lg:grid-cols-2">
-          {props?.allMemos?.edges.map((memo, index) => {
+          {props?.allMemos?.edges.map((memo) => {
             return (
-              <li className="p-4 md:p-2 m-2 rounded border shadow-sm" key={index.toString()}>
+              <li className="p-4 md:p-2 m-2 rounded border shadow-sm" key={memo?.node?.id}>
                 <Link href="/">
                   <a className="block">{memo?.node?.title}</a>
                 </Link>
