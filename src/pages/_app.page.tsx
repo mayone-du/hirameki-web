@@ -1,5 +1,6 @@
 import "tailwindcss/tailwind.css";
 import "nprogress/nprogress.css";
+import "src/styles/markdown.css";
 
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import type { CustomAppProps } from "next/app";

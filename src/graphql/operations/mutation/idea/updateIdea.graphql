@@ -1,0 +1,21 @@
+mutation UpdateIdea(
+  $ideaId: ID!
+  $title: String
+  $content: String
+  $topicIds: [ID]
+  $isPublished: Boolean
+) {
+  updateIdea(
+    input: {
+      ideaId: $ideaId
+      title: $title
+      content: $content
+      topicIds: $topicIds
+      isPublished: $isPublished
+    }
+  ) {
+    idea {
+      id
+    }
+  }
+}

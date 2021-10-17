@@ -11,7 +11,7 @@ import { Layout } from "src/layouts";
 // IdeaEditorがSSR出来ないため、dynamic importにする
 const IdeaEditor = dynamic(
   async () => {
-    const module = await import("src/pages/ideas/new/components/IdeaEditor");
+    const module = await import("src/pages/ideas/components/IdeaEditor");
     return module.IdeaEditor;
   },
   {
@@ -45,15 +45,9 @@ const IdeaEditIndexPage: CustomNextPage = () => {
     <>
       <NextSeo title="アイデアの作成" noindex />
       {!userInfo.isLoading && userInfo.isLogin && data?.idea?.ideaCreator.id === userInfo.userId && (
-        <div className="flex">
-          <div className="md:w-3/5">
-            <h1>アイデアの編集</h1>
-            <IdeaEditor markdown={data.idea.content} />
-          </div>
-
-          <aside className="md:w-2/5">
-            <button className="block p-2 bg-blue-100 border">保存</button>
-          </aside>
+        <div>
+          <h1>アイデアの編集</h1>
+          <IdeaEditor markdown={data.idea.content} ideaId={ideaId} />
         </div>
       )}
 

@@ -2,6 +2,7 @@ import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { NextSeo } from "next-seo";
+import { IdeaMarkdown } from "src/components/IdeaMarkdown";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { initializeApollo } from "src/graphql/apollo/client";
 import type {
@@ -12,7 +13,6 @@ import type {
 import { GetAllIdeasDocument, GetIdeaDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
 import { NewCommentForm } from "src/pages/ideas/components/NewCommentForm";
-import { IdeaPreview } from "src/pages/ideas/new/components/IdeaPreview";
 import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
 // 各アイデアのIDを取得
@@ -28,7 +28,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         };
       })
     : [];
-  return { paths: ids, fallback: false };
+  return { paths: ids, fallback: "blocking" };
 };
 
 // 各アイデアのIDから詳細を取得
@@ -66,7 +66,7 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
           <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
 
           <div className="bg-red-50">
-            <IdeaPreview markdown={props.idea?.content ?? ""} />
+            <IdeaMarkdown markdown={props.idea?.content ?? ""} />
           </div>
 
           {/* コメント */}
@@ -108,17 +108,19 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
 
         {/* サイドバー */}
         <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
+          {/* トピック */}
           <div className="flex items-center">
             {props.idea?.topics.edges.length === 0 && <p>トピックはありません</p>}
             {props.idea?.topics.edges.map((topic) => {
               return (
                 <div key={topic?.node?.id} className="border">
-                  {topic?.node?.name}
+                  <Link href={`/topics/${topic?.node?.name}`}>
+                    <a>{topic?.node?.name}</a>
+                  </Link>
                 </div>
               );
             })}
           </div>
-
           <div>
             <div className="flex items-center">
               <img
@@ -134,7 +136,6 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
             </div>
             <p>{props.idea?.ideaCreator.relatedUser?.selfIntroduction}</p>
           </div>
-
           <div>いいねの数: {props.idea?.likedIdea.edges.length.toString()}</div>
         </aside>
       </div>

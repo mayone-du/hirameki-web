@@ -1,0 +1,7 @@
+mutation CreateIdea($title: String!, $content: String!, $topicIds: [ID]) {
+  createIdea(input: { title: $title, content: $content, topicIds: $topicIds }) {
+    idea {
+      id
+    }
+  }
+}

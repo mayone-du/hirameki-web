@@ -1052,7 +1052,9 @@ export type UpdateIdeaMutationInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   content?: Maybe<Scalars['String']>;
   ideaId: Scalars['ID'];
+  isPublished?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
+  topicIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type UpdateIdeaMutationPayload = {
@@ -1333,6 +1335,44 @@ export type UpdateFollowMutation = (
     & { follow?: Maybe<(
       { __typename?: 'FollowNode' }
       & Pick<FollowNode, 'id'>
+    )> }
+  )> }
+);
+
+export type CreateIdeaMutationVariables = Exact<{
+  title: Scalars['String'];
+  content: Scalars['String'];
+  topicIds?: Maybe<Array<Maybe<Scalars['ID']>> | Maybe<Scalars['ID']>>;
+}>;
+
+
+export type CreateIdeaMutation = (
+  { __typename?: 'Mutation' }
+  & { createIdea?: Maybe<(
+    { __typename?: 'CreateIdeaMutationPayload' }
+    & { idea?: Maybe<(
+      { __typename?: 'IdeaNode' }
+      & Pick<IdeaNode, 'id'>
+    )> }
+  )> }
+);
+
+export type UpdateIdeaMutationVariables = Exact<{
+  ideaId: Scalars['ID'];
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  topicIds?: Maybe<Array<Maybe<Scalars['ID']>> | Maybe<Scalars['ID']>>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+}>;
+
+
+export type UpdateIdeaMutation = (
+  { __typename?: 'Mutation' }
+  & { updateIdea?: Maybe<(
+    { __typename?: 'UpdateIdeaMutationPayload' }
+    & { idea?: Maybe<(
+      { __typename?: 'IdeaNode' }
+      & Pick<IdeaNode, 'id'>
     )> }
   )> }
 );
@@ -1984,6 +2024,84 @@ export function useUpdateFollowMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateFollowMutationHookResult = ReturnType<typeof useUpdateFollowMutation>;
 export type UpdateFollowMutationResult = Apollo.MutationResult<UpdateFollowMutation>;
 export type UpdateFollowMutationOptions = Apollo.BaseMutationOptions<UpdateFollowMutation, UpdateFollowMutationVariables>;
+export const CreateIdeaDocument = gql`
+    mutation CreateIdea($title: String!, $content: String!, $topicIds: [ID]) {
+  createIdea(input: {title: $title, content: $content, topicIds: $topicIds}) {
+    idea {
+      id
+    }
+  }
+}
+    `;
+export type CreateIdeaMutationFn = Apollo.MutationFunction<CreateIdeaMutation, CreateIdeaMutationVariables>;
+
+/**
+ * __useCreateIdeaMutation__
+ *
+ * To run a mutation, you first call `useCreateIdeaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateIdeaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createIdeaMutation, { data, loading, error }] = useCreateIdeaMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      content: // value for 'content'
+ *      topicIds: // value for 'topicIds'
+ *   },
+ * });
+ */
+export function useCreateIdeaMutation(baseOptions?: Apollo.MutationHookOptions<CreateIdeaMutation, CreateIdeaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateIdeaMutation, CreateIdeaMutationVariables>(CreateIdeaDocument, options);
+      }
+export type CreateIdeaMutationHookResult = ReturnType<typeof useCreateIdeaMutation>;
+export type CreateIdeaMutationResult = Apollo.MutationResult<CreateIdeaMutation>;
+export type CreateIdeaMutationOptions = Apollo.BaseMutationOptions<CreateIdeaMutation, CreateIdeaMutationVariables>;
+export const UpdateIdeaDocument = gql`
+    mutation UpdateIdea($ideaId: ID!, $title: String, $content: String, $topicIds: [ID], $isPublished: Boolean) {
+  updateIdea(
+    input: {ideaId: $ideaId, title: $title, content: $content, topicIds: $topicIds, isPublished: $isPublished}
+  ) {
+    idea {
+      id
+    }
+  }
+}
+    `;
+export type UpdateIdeaMutationFn = Apollo.MutationFunction<UpdateIdeaMutation, UpdateIdeaMutationVariables>;
+
+/**
+ * __useUpdateIdeaMutation__
+ *
+ * To run a mutation, you first call `useUpdateIdeaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateIdeaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateIdeaMutation, { data, loading, error }] = useUpdateIdeaMutation({
+ *   variables: {
+ *      ideaId: // value for 'ideaId'
+ *      title: // value for 'title'
+ *      content: // value for 'content'
+ *      topicIds: // value for 'topicIds'
+ *      isPublished: // value for 'isPublished'
+ *   },
+ * });
+ */
+export function useUpdateIdeaMutation(baseOptions?: Apollo.MutationHookOptions<UpdateIdeaMutation, UpdateIdeaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateIdeaMutation, UpdateIdeaMutationVariables>(UpdateIdeaDocument, options);
+      }
+export type UpdateIdeaMutationHookResult = ReturnType<typeof useUpdateIdeaMutation>;
+export type UpdateIdeaMutationResult = Apollo.MutationResult<UpdateIdeaMutation>;
+export type UpdateIdeaMutationOptions = Apollo.BaseMutationOptions<UpdateIdeaMutation, UpdateIdeaMutationVariables>;
 export const CreateMemoDocument = gql`
     mutation CreateMemo($title: String!) {
   createMemo(input: {title: $title}) {

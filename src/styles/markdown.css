@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.markdown h2 {
+  @apply font-bold border-l-4 pl-4 py-2 text-2xl;
+}
+
+.markdown ol {
+  @apply list-decimal pl-6;
+}
+.markdown ul {
+  @apply list-disc pl-6;
+}
+
+.markdown p {
+  @apply whitespace-pre-wrap;
+}

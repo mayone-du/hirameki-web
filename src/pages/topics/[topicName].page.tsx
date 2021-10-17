@@ -1,4 +1,5 @@
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 import { initializeApollo } from "src/graphql/apollo/client";
 import type {
   GetAllTopicsQuery,
@@ -39,6 +40,11 @@ const TopicsDetailPage: CustomNextPage<GetTopicQuery | undefined> = (props) => {
   return (
     <>
       <div>
+        <div>
+          <Link href="/topics">
+            <a>トピック一覧へ</a>
+          </Link>
+        </div>
         <p>トピック詳細</p>
         <div>{props.topic?.displayName}</div>
         <div>

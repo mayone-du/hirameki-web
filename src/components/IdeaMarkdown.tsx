@@ -4,9 +4,10 @@ type Props = {
   markdown: string;
 };
 
-export const IdeaPreview: React.FC<Props> = (props) => {
+export const IdeaMarkdown: React.FC<Props> = (props) => {
   return (
-    <div>
+    // eslint-disable-next-line tailwindcss/no-custom-classname
+    <div className="markdown">
       <ReactMarkdown>{props.markdown}</ReactMarkdown>
     </div>
   );
