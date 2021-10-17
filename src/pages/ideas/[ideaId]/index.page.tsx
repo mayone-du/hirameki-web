@@ -1,5 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { userInfoVar } from "src/graphql/apollo/cache";
 import { initializeApollo } from "src/graphql/apollo/client";
@@ -54,10 +55,14 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
 
       <div className="md:flex">
         <article className="p-2 md:mr-4 md:w-2/3 rounded-xl border">
-          <div>{props.idea?.ideaCreator.id === userInfo.userId && "自分のアイデアです"}</div>
-
+          {props.idea?.ideaCreator.id === userInfo.userId && (
+            <Link href={`/ideas/${props.idea?.id}/edit`}>
+              <a className="block fixed right-40 bottom-40 py-2 px-8 rounded-3xl border border-blue-600">
+                編集する
+              </a>
+            </Link>
+          )}
           <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
-          <p>{props.idea?.content}</p>
           <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
 
           <div className="bg-red-50">

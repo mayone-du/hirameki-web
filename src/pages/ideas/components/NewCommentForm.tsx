@@ -16,6 +16,7 @@ export const NewCommentForm: React.VFC<Props> = (props) => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CommentInput>();
   const [createThread, { loading: isThreadLoading }] = useCreateThreadMutation();
   const [createComment, { loading: isCommentLoading }] = useCreateCommentMutation();
@@ -40,11 +41,13 @@ export const NewCommentForm: React.VFC<Props> = (props) => {
       });
       if (commentErrors) throw commentErrors;
       toast.success("コメントを送信しました", { id: toastId });
+      setValue("comment", "");
     } catch (error) {
       toast.error("コメントを送信出来ませんでした", { id: toastId });
       console.error(error);
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <textarea

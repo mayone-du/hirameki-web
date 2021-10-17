@@ -5,8 +5,11 @@ import { useCallback, useMemo, useState } from "react";
 import { SimpleMdeReact } from "react-simplemde-editor";
 import { IdeaPreview } from "src/pages/ideas/new/components/IdeaPreview";
 
-export const IdeaEditor = () => {
-  const [value, setValue] = useState("Initial value");
+type Props = {
+  markdown: string;
+};
+export const IdeaEditor: React.VFC<Props> = (props) => {
+  const [value, setValue] = useState(props.markdown);
 
   const handleChange = useCallback((value: string) => {
     setValue(value);

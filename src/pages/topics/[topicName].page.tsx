@@ -22,6 +22,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     : [];
   return { paths: topicNames, fallback: false };
 };
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const topicName = context.params?.topicName?.toString() ?? "";
   const apolloClient = initializeApollo(null, undefined);
@@ -31,11 +32,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
       topicName: topicName,
     },
   });
-
   return { props: data, revalidate: 60 };
 };
+
 const TopicsDetailPage: CustomNextPage<GetTopicQuery | undefined> = (props) => {
-  return <div>{props.topic?.displayName}</div>;
+  return (
+    <>
+      <div>
+        <p>トピック詳細</p>
+        <div>{props.topic?.displayName}</div>
+        <div>
+          {props.topic?.topics.edges.map((idea) => {
+            return (
+              <div className="border" key={idea?.node?.id}>
+                {idea?.node?.title}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default TopicsDetailPage;
