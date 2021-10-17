@@ -21,6 +21,8 @@ const IdeaEditor = dynamic(
     },
   },
 );
+
+// アイデアの編集ページ
 const IdeaEditIndexPage: CustomNextPage = () => {
   const userInfo = useReactiveVar(userInfoVar);
   const router = useRouter();
@@ -37,7 +39,7 @@ const IdeaEditIndexPage: CustomNextPage = () => {
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo.isLogin, ideaId]);
+  }, [userInfo.isLogin, userInfo.userId, ideaId]);
 
   return (
     <>
@@ -57,7 +59,8 @@ const IdeaEditIndexPage: CustomNextPage = () => {
 
       {!userInfo.isLoading &&
         userInfo.isLogin &&
-        data?.idea?.ideaCreator.id !== userInfo.userId && <div>404 他の人の記事です</div>}
+        data?.idea &&
+        data.idea.ideaCreator.id !== userInfo.userId && <div>404 他の人の記事です</div>}
 
       {!userInfo.isLoading && !userInfo.isLogin && <div>ログインが必要です。</div>}
     </>

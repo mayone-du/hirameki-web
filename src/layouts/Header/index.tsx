@@ -13,8 +13,15 @@ export const Header: React.VFC = memo(() => {
   const userInfo = useReactiveVar(userInfoVar);
   const { handleOpenModal } = useAuthModal();
 
-  const handleSignOut = useCallback(() => {
-    signOut();
+  const handleSignOut = useCallback(async () => {
+    await signOut();
+    userInfoVar({
+      isLogin: false,
+      isLoading: false,
+      userId: "",
+      profileName: "",
+      profileImage: "",
+    });
   }, []);
 
   const PROFILE_MENU_ITEMS = [

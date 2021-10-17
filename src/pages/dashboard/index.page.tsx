@@ -1,5 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage } from "next";
+import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { useEffect } from "react";
 import { userInfoVar } from "src/graphql/apollo/cache";
@@ -20,10 +21,33 @@ const DashboradIndexPage: CustomNextPage = () => {
       <NextSeo title="ダッシュボード" noindex />
 
       <div>
-        {data?.myAllIdeas?.edges.length === 0 && <div>アイデアはまだありません</div>}
-        {data?.myAllIdeas?.edges.map((idea) => {
-          return <div key={idea?.node?.id}>{idea?.node?.title}</div>;
-        })}
+        <div>
+          <div>Idea</div>
+          {data?.myAllIdeas?.edges.length === 0 && <div>アイデアはまだありません</div>}
+          {data?.myAllIdeas?.edges.map((idea) => {
+            return (
+              <div key={idea?.node?.id}>
+                <Link href={`/ideas/${idea?.node?.id}`}>
+                  <a className="block bg-blue-300">{idea?.node?.title}</a>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+
+        <div>
+          <div>Memo</div>
+          {data?.myAllMemos?.edges.length === 0 && <div>メモはまだありません</div>}
+          {data?.myAllMemos?.edges.map((memo) => {
+            return (
+              <div key={memo?.node?.id}>
+                <Link href={`/memos/${memo?.node?.id}`}>
+                  <a className="block bg-blue-300">{memo?.node?.title}</a>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );

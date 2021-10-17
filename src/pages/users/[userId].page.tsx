@@ -1,5 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import type { CustomNextPage, GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 import { NextSeo } from "next-seo";
 import { AiOutlineGithub, AiOutlineLink, AiOutlineTwitter } from "react-icons/ai";
 import { BiLockAlt } from "react-icons/bi";
@@ -146,14 +147,33 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
           アイデア
           <br />
           {props.user?.ideaCreator.edges.map((idea) => {
-            return (
+            // 自分のページであれば非公開のアイデアも表示する
+            return props.user?.id === userInfo.userId ? (
               <div className="m-2 bg-green-100" key={idea?.node?.id}>
-                {idea?.node?.title}
-                <br />
-                いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
-                <br />
-                {idea?.node?.isPublished ? "公開" : <BiLockAlt className="w-6 h-6" />}
+                <Link href={`/ideas/${idea?.node?.id}`}>
+                  <a className="block">
+                    {idea?.node?.title}
+                    <br />
+                    いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
+                    <br />
+                    {idea?.node?.isPublished ? "公開" : <BiLockAlt className="w-6 h-6" />}
+                  </a>
+                </Link>
               </div>
+            ) : (
+              idea?.node?.isPublished && (
+                <div className="m-2 bg-green-100" key={idea?.node?.id}>
+                  <Link href={`/ideas/${idea?.node?.id}`}>
+                    <a className="block">
+                      {idea?.node?.title}
+                      <br />
+                      いいねの数:{idea?.node?.likedIdea.edges.length.toString()}
+                      <br />
+                      {idea?.node?.isPublished ? "公開" : <BiLockAlt className="w-6 h-6" />}
+                    </a>
+                  </Link>
+                </div>
+              )
             );
           })}
         </div>
