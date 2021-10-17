@@ -1,0 +1,10 @@
+query GetAllTopics {
+  allTopics {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

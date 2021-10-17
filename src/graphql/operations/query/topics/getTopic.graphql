@@ -1,0 +1,14 @@
+query GetTopic($topicName: String!) {
+  topic(topicName: $topicName) {
+    id
+    displayName
+    topics {
+      edges {
+        node {
+          id
+          title
+        }
+      }
+    }
+  }
+}

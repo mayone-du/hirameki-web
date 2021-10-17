@@ -665,6 +665,7 @@ export type Query = {
   allMemos?: Maybe<MemoNodeConnection>;
   allMyNotifications?: Maybe<NotificationNodeConnection>;
   allProfiles?: Maybe<ProfileNodeConnection>;
+  allTopics?: Maybe<TopicNodeConnection>;
   allUsers?: Maybe<UserNodeConnection>;
   idea?: Maybe<IdeaNode>;
   memo?: Maybe<MemoNode>;
@@ -672,6 +673,7 @@ export type Query = {
   myAllMemos?: Maybe<MemoNodeConnection>;
   myFollowings?: Maybe<FollowNodeConnection>;
   myUserInfo?: Maybe<UserNode>;
+  topic?: Maybe<TopicNode>;
   user?: Maybe<UserNode>;
 };
 
@@ -750,6 +752,17 @@ export type QueryAllProfilesArgs = {
 };
 
 
+export type QueryAllTopicsArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  name_Icontains?: Maybe<Scalars['String']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
 export type QueryAllUsersArgs = {
   after?: Maybe<Scalars['String']>;
   before?: Maybe<Scalars['String']>;
@@ -813,6 +826,11 @@ export type QueryMyFollowingsArgs = {
   isFollowing?: Maybe<Scalars['Boolean']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryTopicArgs = {
+  topicName: Scalars['String'];
 };
 
 
@@ -967,6 +985,7 @@ export enum ThreadThreadTargetType {
 
 export type TopicNode = Node & {
   __typename?: 'TopicNode';
+  displayName: Scalars['String'];
   /** The ID of the object. */
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -1662,6 +1681,46 @@ export type SearchItemsQuery = (
         & Pick<ProfileNode, 'id' | 'profileName'>
       )> }
     )>> }
+  )> }
+);
+
+export type GetAllTopicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTopicsQuery = (
+  { __typename?: 'Query' }
+  & { allTopics?: Maybe<(
+    { __typename?: 'TopicNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'TopicNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'TopicNode' }
+        & Pick<TopicNode, 'id' | 'name'>
+      )> }
+    )>> }
+  )> }
+);
+
+export type GetTopicQueryVariables = Exact<{
+  topicName: Scalars['String'];
+}>;
+
+
+export type GetTopicQuery = (
+  { __typename?: 'Query' }
+  & { topic?: Maybe<(
+    { __typename?: 'TopicNode' }
+    & Pick<TopicNode, 'id' | 'displayName'>
+    & { topics: (
+      { __typename?: 'IdeaNodeConnection' }
+      & { edges: Array<Maybe<(
+        { __typename?: 'IdeaNodeEdge' }
+        & { node?: Maybe<(
+          { __typename?: 'IdeaNode' }
+          & Pick<IdeaNode, 'id' | 'title'>
+        )> }
+      )>> }
+    ) }
   )> }
 );
 
@@ -2506,6 +2565,89 @@ export function useSearchItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type SearchItemsQueryHookResult = ReturnType<typeof useSearchItemsQuery>;
 export type SearchItemsLazyQueryHookResult = ReturnType<typeof useSearchItemsLazyQuery>;
 export type SearchItemsQueryResult = Apollo.QueryResult<SearchItemsQuery, SearchItemsQueryVariables>;
+export const GetAllTopicsDocument = gql`
+    query GetAllTopics {
+  allTopics {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllTopicsQuery__
+ *
+ * To run a query within a React component, call `useGetAllTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTopicsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTopicsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTopicsQuery, GetAllTopicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllTopicsQuery, GetAllTopicsQueryVariables>(GetAllTopicsDocument, options);
+      }
+export function useGetAllTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTopicsQuery, GetAllTopicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllTopicsQuery, GetAllTopicsQueryVariables>(GetAllTopicsDocument, options);
+        }
+export type GetAllTopicsQueryHookResult = ReturnType<typeof useGetAllTopicsQuery>;
+export type GetAllTopicsLazyQueryHookResult = ReturnType<typeof useGetAllTopicsLazyQuery>;
+export type GetAllTopicsQueryResult = Apollo.QueryResult<GetAllTopicsQuery, GetAllTopicsQueryVariables>;
+export const GetTopicDocument = gql`
+    query GetTopic($topicName: String!) {
+  topic(topicName: $topicName) {
+    id
+    displayName
+    topics {
+      edges {
+        node {
+          id
+          title
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTopicQuery__
+ *
+ * To run a query within a React component, call `useGetTopicQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopicQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopicQuery({
+ *   variables: {
+ *      topicName: // value for 'topicName'
+ *   },
+ * });
+ */
+export function useGetTopicQuery(baseOptions: Apollo.QueryHookOptions<GetTopicQuery, GetTopicQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTopicQuery, GetTopicQueryVariables>(GetTopicDocument, options);
+      }
+export function useGetTopicLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTopicQuery, GetTopicQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTopicQuery, GetTopicQueryVariables>(GetTopicDocument, options);
+        }
+export type GetTopicQueryHookResult = ReturnType<typeof useGetTopicQuery>;
+export type GetTopicLazyQueryHookResult = ReturnType<typeof useGetTopicLazyQuery>;
+export type GetTopicQueryResult = Apollo.QueryResult<GetTopicQuery, GetTopicQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
   allUsers(isSuperuser: false, isActive: true) {

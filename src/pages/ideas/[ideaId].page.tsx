@@ -20,15 +20,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apolloClient.query<GetAllIdeasQuery>({ query: GetAllIdeasDocument });
   const ids = data.allIdeas
     ? data.allIdeas.edges.map((idea) => {
-        if (idea?.node) {
-          return {
-            params: {
-              ideaId: idea.node.id,
-            },
-          };
-        } else {
-          return { params: { ideaId: "" } };
-        }
+        return {
+          params: {
+            ideaId: idea?.node?.id ?? "",
+          },
+        };
       })
     : [];
   return { paths: ids, fallback: false };
