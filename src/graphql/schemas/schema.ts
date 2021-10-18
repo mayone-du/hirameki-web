@@ -1711,7 +1711,7 @@ export type GetIdeaQuery = (
         { __typename?: 'LikeNodeEdge' }
         & { node?: Maybe<(
           { __typename?: 'LikeNode' }
-          & Pick<LikeNode, 'id'>
+          & Pick<LikeNode, 'id' | 'isLiked'>
           & { likedUser: (
             { __typename?: 'UserNode' }
             & Pick<UserNode, 'id'>
@@ -2562,7 +2562,7 @@ export const GetIndexPageItemsDocument = gql`
             googleImageUrl
           }
         }
-        likedIdea {
+        likedIdea(isLiked: true) {
           edges {
             node {
               id
@@ -2585,7 +2585,7 @@ export const GetIndexPageItemsDocument = gql`
             googleImageUrl
           }
         }
-        likedMemo {
+        likedMemo(isLiked: true) {
           edges {
             node {
               id
@@ -2754,10 +2754,11 @@ export const GetIdeaDocument = gql`
         websiteUrl
       }
     }
-    likedIdea {
+    likedIdea(isLiked: true) {
       edges {
         node {
           id
+          isLiked
           likedUser {
             id
           }

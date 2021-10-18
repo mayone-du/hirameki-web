@@ -30,6 +30,10 @@ export const Header: React.VFC = memo(() => {
       href: "/dashboard",
     },
     {
+      label: "Likes",
+      href: "/dashboard/like",
+    },
+    {
       label: "Settings",
       href: "/settings",
     },

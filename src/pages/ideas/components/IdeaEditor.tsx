@@ -41,7 +41,7 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
     try {
       const { errors } = await createIdea({
         variables: {
-          title: "とりあえず固定タイトル",
+          title: title,
           content: markdownValue,
         },
       });

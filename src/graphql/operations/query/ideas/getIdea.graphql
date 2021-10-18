@@ -27,10 +27,11 @@ query GetIdea($id: ID!) {
         websiteUrl
       }
     }
-    likedIdea {
+    likedIdea(isLiked: true) {
       edges {
         node {
           id
+          isLiked
           likedUser {
             id
           }
