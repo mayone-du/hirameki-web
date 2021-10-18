@@ -65,7 +65,7 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
           <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
           <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
 
-          <div className="bg-red-50">
+          <div>
             <IdeaMarkdown markdown={props.idea?.content ?? ""} />
           </div>
 

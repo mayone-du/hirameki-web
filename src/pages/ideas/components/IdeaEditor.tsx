@@ -8,12 +8,13 @@ import { IdeaMarkdown } from "src/components/IdeaMarkdown";
 import { useCreateIdeaMutation, useUpdateIdeaMutation } from "src/graphql/schemas/schema";
 
 type Props = {
+  title: string;
   markdown: string;
   ideaId?: string;
 };
 export const IdeaEditor: React.VFC<Props> = (props) => {
   const [markdownValue, setMarkdownValue] = useState(props.markdown);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(props.title);
   const [createIdea, { loading: isCreateLoading }] = useCreateIdeaMutation();
   const [updateIdea, { loading: isUpdateLoding }] = useUpdateIdeaMutation();
 
@@ -36,7 +37,7 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
   // 作成用関数
   const handleCreateIdea = async () => {
     const toastId = toast.loading("作成中");
-
+    if (title === "") return toast.error("タイトルは必須です", { id: toastId });
     try {
       const { errors } = await createIdea({
         variables: {
@@ -55,6 +56,7 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
   // 更新陽関数
   const handleUpdateIdea = async () => {
     const toastId = toast.loading("更新中");
+    if (title === "") return toast.error("タイトルは必須です", { id: toastId });
     try {
       const { errors } = await updateIdea({
         variables: {

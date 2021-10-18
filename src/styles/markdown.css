@@ -5,6 +5,9 @@
 .markdown h2 {
   @apply font-bold border-l-4 pl-4 py-2 text-2xl;
 }
+.markdown h3 {
+  @apply text-xl bg-gray-100 p-2;
+}
 
 .markdown ol {
   @apply list-decimal pl-6;
@@ -13,6 +16,10 @@
   @apply list-disc pl-6;
 }
 
-.markdown p {
-  @apply whitespace-pre-wrap;
+.markdown > p {
+  @apply mb-6;
+}
+
+.markdown blockquote {
+  @apply bg-gray-100 border-l-4 border-gray-400 p-2;
 }
