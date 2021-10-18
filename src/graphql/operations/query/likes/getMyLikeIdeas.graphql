@@ -1,0 +1,13 @@
+query GetMyLikeIdeas {
+  myLikeIdeas {
+    edges {
+      node {
+        id
+        isLiked
+        likedIdea {
+          id
+        }
+      }
+    }
+  }
+}

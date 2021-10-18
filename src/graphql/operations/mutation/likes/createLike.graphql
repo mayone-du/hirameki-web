@@ -1,0 +1,19 @@
+mutation CreateLike(
+  $likeTargetType: String!
+  $likedIdeaId: ID
+  $likedMemoId: ID
+  $likedCommentId: ID
+) {
+  createLike(
+    input: {
+      likeTargetType: $likeTargetType
+      likedIdeaId: $likedIdeaId
+      likedMemoId: $likedMemoId
+      likedCommentId: $likedCommentId
+    }
+  ) {
+    like {
+      id
+    }
+  }
+}

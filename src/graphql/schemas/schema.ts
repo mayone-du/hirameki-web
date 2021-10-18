@@ -672,6 +672,7 @@ export type Query = {
   myAllIdeas?: Maybe<IdeaNodeConnection>;
   myAllMemos?: Maybe<MemoNodeConnection>;
   myFollowings?: Maybe<FollowNodeConnection>;
+  myLikeIdeas?: Maybe<LikeNodeConnection>;
   myUserInfo?: Maybe<UserNode>;
   topic?: Maybe<TopicNode>;
   user?: Maybe<UserNode>;
@@ -825,6 +826,18 @@ export type QueryMyFollowingsArgs = {
   followingUser?: Maybe<Scalars['ID']>;
   isFollowing?: Maybe<Scalars['Boolean']>;
   last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryMyLikeIdeasArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isLiked?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  likeTargetType?: Maybe<Scalars['String']>;
+  likedUser?: Maybe<Scalars['ID']>;
   offset?: Maybe<Scalars['Int']>;
 };
 
@@ -1377,6 +1390,42 @@ export type UpdateIdeaMutation = (
   )> }
 );
 
+export type CreateLikeMutationVariables = Exact<{
+  likeTargetType: Scalars['String'];
+  likedIdeaId?: Maybe<Scalars['ID']>;
+  likedMemoId?: Maybe<Scalars['ID']>;
+  likedCommentId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type CreateLikeMutation = (
+  { __typename?: 'Mutation' }
+  & { createLike?: Maybe<(
+    { __typename?: 'CreateLikeMutationPayload' }
+    & { like?: Maybe<(
+      { __typename?: 'LikeNode' }
+      & Pick<LikeNode, 'id'>
+    )> }
+  )> }
+);
+
+export type UpdateLikeMutationVariables = Exact<{
+  likeId: Scalars['ID'];
+  isLiked: Scalars['Boolean'];
+}>;
+
+
+export type UpdateLikeMutation = (
+  { __typename?: 'Mutation' }
+  & { updateLike?: Maybe<(
+    { __typename?: 'UpdateLikeMutationPayload' }
+    & { like?: Maybe<(
+      { __typename?: 'LikeNode' }
+      & Pick<LikeNode, 'id'>
+    )> }
+  )> }
+);
+
 export type CreateMemoMutationVariables = Exact<{
   title: Scalars['String'];
 }>;
@@ -1684,6 +1733,27 @@ export type GetIdeaQuery = (
         )> }
       )>> }
     ) }
+  )> }
+);
+
+export type GetMyLikeIdeasQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyLikeIdeasQuery = (
+  { __typename?: 'Query' }
+  & { myLikeIdeas?: Maybe<(
+    { __typename?: 'LikeNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'LikeNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'LikeNode' }
+        & Pick<LikeNode, 'id' | 'isLiked'>
+        & { likedIdea?: Maybe<(
+          { __typename?: 'IdeaNode' }
+          & Pick<IdeaNode, 'id'>
+        )> }
+      )> }
+    )>> }
   )> }
 );
 
@@ -2102,6 +2172,82 @@ export function useUpdateIdeaMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateIdeaMutationHookResult = ReturnType<typeof useUpdateIdeaMutation>;
 export type UpdateIdeaMutationResult = Apollo.MutationResult<UpdateIdeaMutation>;
 export type UpdateIdeaMutationOptions = Apollo.BaseMutationOptions<UpdateIdeaMutation, UpdateIdeaMutationVariables>;
+export const CreateLikeDocument = gql`
+    mutation CreateLike($likeTargetType: String!, $likedIdeaId: ID, $likedMemoId: ID, $likedCommentId: ID) {
+  createLike(
+    input: {likeTargetType: $likeTargetType, likedIdeaId: $likedIdeaId, likedMemoId: $likedMemoId, likedCommentId: $likedCommentId}
+  ) {
+    like {
+      id
+    }
+  }
+}
+    `;
+export type CreateLikeMutationFn = Apollo.MutationFunction<CreateLikeMutation, CreateLikeMutationVariables>;
+
+/**
+ * __useCreateLikeMutation__
+ *
+ * To run a mutation, you first call `useCreateLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLikeMutation, { data, loading, error }] = useCreateLikeMutation({
+ *   variables: {
+ *      likeTargetType: // value for 'likeTargetType'
+ *      likedIdeaId: // value for 'likedIdeaId'
+ *      likedMemoId: // value for 'likedMemoId'
+ *      likedCommentId: // value for 'likedCommentId'
+ *   },
+ * });
+ */
+export function useCreateLikeMutation(baseOptions?: Apollo.MutationHookOptions<CreateLikeMutation, CreateLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLikeMutation, CreateLikeMutationVariables>(CreateLikeDocument, options);
+      }
+export type CreateLikeMutationHookResult = ReturnType<typeof useCreateLikeMutation>;
+export type CreateLikeMutationResult = Apollo.MutationResult<CreateLikeMutation>;
+export type CreateLikeMutationOptions = Apollo.BaseMutationOptions<CreateLikeMutation, CreateLikeMutationVariables>;
+export const UpdateLikeDocument = gql`
+    mutation UpdateLike($likeId: ID!, $isLiked: Boolean!) {
+  updateLike(input: {likeId: $likeId, isLiked: $isLiked}) {
+    like {
+      id
+    }
+  }
+}
+    `;
+export type UpdateLikeMutationFn = Apollo.MutationFunction<UpdateLikeMutation, UpdateLikeMutationVariables>;
+
+/**
+ * __useUpdateLikeMutation__
+ *
+ * To run a mutation, you first call `useUpdateLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLikeMutation, { data, loading, error }] = useUpdateLikeMutation({
+ *   variables: {
+ *      likeId: // value for 'likeId'
+ *      isLiked: // value for 'isLiked'
+ *   },
+ * });
+ */
+export function useUpdateLikeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLikeMutation, UpdateLikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLikeMutation, UpdateLikeMutationVariables>(UpdateLikeDocument, options);
+      }
+export type UpdateLikeMutationHookResult = ReturnType<typeof useUpdateLikeMutation>;
+export type UpdateLikeMutationResult = Apollo.MutationResult<UpdateLikeMutation>;
+export type UpdateLikeMutationOptions = Apollo.BaseMutationOptions<UpdateLikeMutation, UpdateLikeMutationVariables>;
 export const CreateMemoDocument = gql`
     mutation CreateMemo($title: String!) {
   createMemo(input: {title: $title}) {
@@ -2627,6 +2773,48 @@ export function useGetIdeaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetIdeaQueryHookResult = ReturnType<typeof useGetIdeaQuery>;
 export type GetIdeaLazyQueryHookResult = ReturnType<typeof useGetIdeaLazyQuery>;
 export type GetIdeaQueryResult = Apollo.QueryResult<GetIdeaQuery, GetIdeaQueryVariables>;
+export const GetMyLikeIdeasDocument = gql`
+    query GetMyLikeIdeas {
+  myLikeIdeas {
+    edges {
+      node {
+        id
+        isLiked
+        likedIdea {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyLikeIdeasQuery__
+ *
+ * To run a query within a React component, call `useGetMyLikeIdeasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyLikeIdeasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyLikeIdeasQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyLikeIdeasQuery(baseOptions?: Apollo.QueryHookOptions<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>(GetMyLikeIdeasDocument, options);
+      }
+export function useGetMyLikeIdeasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>(GetMyLikeIdeasDocument, options);
+        }
+export type GetMyLikeIdeasQueryHookResult = ReturnType<typeof useGetMyLikeIdeasQuery>;
+export type GetMyLikeIdeasLazyQueryHookResult = ReturnType<typeof useGetMyLikeIdeasLazyQuery>;
+export type GetMyLikeIdeasQueryResult = Apollo.QueryResult<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>;
 export const SearchItemsDocument = gql`
     query SearchItems($keyword: String!) {
   allIdeas(title_Icontains: $keyword) {

@@ -1,0 +1,7 @@
+mutation UpdateLike($likeId: ID!, $isLiked: Boolean!) {
+  updateLike(input: { likeId: $likeId, isLiked: $isLiked }) {
+    like {
+      id
+    }
+  }
+}

@@ -12,6 +12,7 @@ import type {
 } from "src/graphql/schemas/schema";
 import { GetAllIdeasDocument, GetIdeaDocument } from "src/graphql/schemas/schema";
 import { Layout } from "src/layouts";
+import { LikeButton } from "src/pages/ideas/[ideaId]/components/LikeButton";
 import { NewCommentForm } from "src/pages/ideas/components/NewCommentForm";
 import { MEDIAFILE_API_ENDPOINT } from "src/utils/API_ENDPOINTS";
 
@@ -136,7 +137,9 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
             </div>
             <p>{props.idea?.ideaCreator.relatedUser?.selfIntroduction}</p>
           </div>
-          <div>いいねの数: {props.idea?.likedIdea.edges.length.toString()}</div>
+          <LikeButton ideaId={props.idea?.id ?? ""} />
+
+          {props.idea?.likedIdea.edges.length.toString()}
         </aside>
       </div>
     </>
