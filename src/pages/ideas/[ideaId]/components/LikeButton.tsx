@@ -27,7 +27,7 @@ export const LikeButton: React.VFC<Props> = memo((props) => {
   });
   const { handleOpenModal } = useAuthModal();
   // 自分がいいねしているアイデアを取得するクエリ
-  const [query, { data }] = useGetMyLikeIdeasLazyQuery();
+  const [query, { data }] = useGetMyLikeIdeasLazyQuery({ fetchPolicy: "network-only" });
   const [createLike, { loading: isCreateLoading }] = useCreateLikeMutation();
   const [updateLike, { loading: isUpdateLoading }] = useUpdateLikeMutation();
 
@@ -43,34 +43,40 @@ export const LikeButton: React.VFC<Props> = memo((props) => {
     // ログイン済みであればクエリを実行
     if (!userInfo.isLoading && userInfo.isLogin) {
       query();
-      // いいね中のアイデアに、表示しているページのアイデアIDが含まれていれば(1度でもいいねされていれば)isAlreadyをtrueにする
-      data?.myLikeIdeas?.edges.forEach((like) => {
-        if (like?.node?.likedIdea?.id === props.ideaId) {
-          return setLikeState({
-            isAlready: true,
-            // フラグによって変更
-            isLiked: like.node.isLiked,
-            likeId: like.node.id,
-          });
-        } else {
-          return setLikeState({
-            likeId: "",
-            isAlready: false,
-            isLiked: false,
-          });
-        }
-      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo.isLoading]);
 
-      data?.myLikeIdeas?.edges.length === 0 &&
-        setLikeState({
-          likeId: "",
-          isAlready: false,
-          isLiked: false,
-        });
+  useEffect(() => {
+    if (!data?.myLikeIdeas) return;
+    // いいね中のアイデアに、表示しているページのアイデアIDが含まれていれば(1度でもいいねされていれば)isAlreadyをtrueにする
+    let isAlready: null | boolean = null,
+      isLiked: null | boolean = null,
+      likeId = "";
+    data.myLikeIdeas.edges.forEach((like) => {
+      if (like?.node?.likedIdea?.id === props.ideaId) {
+        return (isAlready = true), (isLiked = like.node.isLiked), (likeId = like.node.id);
+      }
+    });
+
+    if (isAlready) {
+      return setLikeState({
+        isAlready: isAlready,
+        // フラグによって変更
+        isLiked: isLiked,
+        likeId: likeId,
+      });
     }
 
+    if (likeState.isAlready === null) {
+      return setLikeState({
+        likeId: "",
+        isAlready: false,
+        isLiked: false,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo.isLoading, data]);
+  }, [data]);
 
   // いいねボタンをクリックしたときの処理
   const handleClick = useCallback(async () => {

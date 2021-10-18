@@ -1,0 +1,25 @@
+query GetMyAllLikes {
+  myLikeIdeas(isLiked: true) {
+    edges {
+      node {
+        id
+        likedIdea {
+          id
+          title
+        }
+      }
+    }
+  }
+
+  myLikeMemos(isLiked: true) {
+    edges {
+      node {
+        id
+        likedMemo {
+          id
+          title
+        }
+      }
+    }
+  }
+}

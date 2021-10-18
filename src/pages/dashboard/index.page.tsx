@@ -22,6 +22,11 @@ const DashboradIndexPage: CustomNextPage = () => {
 
       <div>
         <div>
+          <Link href="/dashboard/like">
+            <a>いいねした投稿</a>
+          </Link>
+        </div>
+        <div>
           <div>Idea</div>
           {data?.myAllIdeas?.edges.length === 0 && <div>アイデアはまだありません</div>}
           {data?.myAllIdeas?.edges.map((idea) => {

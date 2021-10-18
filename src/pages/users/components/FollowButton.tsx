@@ -26,7 +26,7 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
   });
   const { handleOpenModal } = useAuthModal();
   // 自分がフォローしているユーザーを取得するクエリ
-  const [query, { data }] = useGetMyFollowingsLazyQuery();
+  const [query, { data }] = useGetMyFollowingsLazyQuery({ fetchPolicy: "network-only" });
   const [createFollow, { loading: isCreateLoading }] = useCreateFollowMutation();
   const [updateFollow, { loading: isUpdateLoading }] = useUpdateFollowMutation();
 
@@ -42,34 +42,42 @@ export const FollowButton: React.VFC<Props> = memo((props) => {
     // ログイン済みであればクエリを実行
     if (!userInfo.isLoading && userInfo.isLogin) {
       query();
-      // フォロー中のユーザーに、表示しているページのユーザーIDが含まれていれば(1度でもフォローされていれば)isAlreadyをtrueにする
-      data?.myFollowings?.edges.forEach((follow) => {
-        if (follow?.node?.followedUser.id === props.pageUserId) {
-          return setFollowingState({
-            isAlready: true,
-            // フラグによって変更
-            isFollowing: follow.node.isFollowing,
-            followId: follow.node.id,
-          });
-        } else {
-          return setFollowingState({
-            followId: "",
-            isAlready: false,
-            isFollowing: false,
-          });
-        }
-      });
-
-      data?.myFollowings?.edges.length === 0 &&
-        setFollowingState({
-          followId: "",
-          isAlready: false,
-          isFollowing: false,
-        });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo.isLoading, data]);
+  }, [userInfo.isLoading]);
+
+  useEffect(() => {
+    if (!data?.myFollowings) return;
+    let isAlready: null | boolean = null,
+      isFollowing: null | boolean = null,
+      followId = "";
+    // フォロー中のユーザーに、表示しているページのユーザーIDが含まれていれば(1度でもフォローされていれば)isAlreadyをtrueにする
+    data.myFollowings.edges.forEach((follow) => {
+      if (follow?.node?.followedUser.id === props.pageUserId) {
+        return (
+          (isAlready = true), (isFollowing = follow.node.isFollowing), (followId = follow.node.id)
+        );
+      }
+    });
+
+    if (isAlready) {
+      return setFollowingState({
+        isAlready: isAlready,
+        // フラグによって変更
+        isFollowing: isFollowing,
+        followId: followId,
+      });
+    }
+    if (followingState.isAlready === null) {
+      return setFollowingState({
+        followId: "",
+        isAlready: false,
+        isFollowing: false,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   // フォローボタンをクリックしたときの処理
   const handleClick = useCallback(async () => {

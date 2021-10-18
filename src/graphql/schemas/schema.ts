@@ -673,6 +673,7 @@ export type Query = {
   myAllMemos?: Maybe<MemoNodeConnection>;
   myFollowings?: Maybe<FollowNodeConnection>;
   myLikeIdeas?: Maybe<LikeNodeConnection>;
+  myLikeMemos?: Maybe<LikeNodeConnection>;
   myUserInfo?: Maybe<UserNode>;
   topic?: Maybe<TopicNode>;
   user?: Maybe<UserNode>;
@@ -831,6 +832,18 @@ export type QueryMyFollowingsArgs = {
 
 
 export type QueryMyLikeIdeasArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isLiked?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  likeTargetType?: Maybe<Scalars['String']>;
+  likedUser?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryMyLikeMemosArgs = {
   after?: Maybe<Scalars['String']>;
   before?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
@@ -1733,6 +1746,40 @@ export type GetIdeaQuery = (
         )> }
       )>> }
     ) }
+  )> }
+);
+
+export type GetMyAllLikesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyAllLikesQuery = (
+  { __typename?: 'Query' }
+  & { myLikeIdeas?: Maybe<(
+    { __typename?: 'LikeNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'LikeNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'LikeNode' }
+        & Pick<LikeNode, 'id'>
+        & { likedIdea?: Maybe<(
+          { __typename?: 'IdeaNode' }
+          & Pick<IdeaNode, 'id' | 'title'>
+        )> }
+      )> }
+    )>> }
+  )>, myLikeMemos?: Maybe<(
+    { __typename?: 'LikeNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'LikeNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'LikeNode' }
+        & Pick<LikeNode, 'id'>
+        & { likedMemo?: Maybe<(
+          { __typename?: 'MemoNode' }
+          & Pick<MemoNode, 'id' | 'title'>
+        )> }
+      )> }
+    )>> }
   )> }
 );
 
@@ -2773,6 +2820,59 @@ export function useGetIdeaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetIdeaQueryHookResult = ReturnType<typeof useGetIdeaQuery>;
 export type GetIdeaLazyQueryHookResult = ReturnType<typeof useGetIdeaLazyQuery>;
 export type GetIdeaQueryResult = Apollo.QueryResult<GetIdeaQuery, GetIdeaQueryVariables>;
+export const GetMyAllLikesDocument = gql`
+    query GetMyAllLikes {
+  myLikeIdeas(isLiked: true) {
+    edges {
+      node {
+        id
+        likedIdea {
+          id
+          title
+        }
+      }
+    }
+  }
+  myLikeMemos(isLiked: true) {
+    edges {
+      node {
+        id
+        likedMemo {
+          id
+          title
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMyAllLikesQuery__
+ *
+ * To run a query within a React component, call `useGetMyAllLikesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyAllLikesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyAllLikesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyAllLikesQuery(baseOptions?: Apollo.QueryHookOptions<GetMyAllLikesQuery, GetMyAllLikesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyAllLikesQuery, GetMyAllLikesQueryVariables>(GetMyAllLikesDocument, options);
+      }
+export function useGetMyAllLikesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyAllLikesQuery, GetMyAllLikesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyAllLikesQuery, GetMyAllLikesQueryVariables>(GetMyAllLikesDocument, options);
+        }
+export type GetMyAllLikesQueryHookResult = ReturnType<typeof useGetMyAllLikesQuery>;
+export type GetMyAllLikesLazyQueryHookResult = ReturnType<typeof useGetMyAllLikesLazyQuery>;
+export type GetMyAllLikesQueryResult = Apollo.QueryResult<GetMyAllLikesQuery, GetMyAllLikesQueryVariables>;
 export const GetMyLikeIdeasDocument = gql`
     query GetMyLikeIdeas {
   myLikeIdeas {
