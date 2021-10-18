@@ -53,95 +53,100 @@ const IdeasDetailPage: CustomNextPage<GetIdeaQuery | undefined> = (props) => {
   return (
     <>
       <NextSeo title={props.idea?.title ?? "アイデア"} />
-
-      <div className="md:flex">
-        <article className="p-2 md:mr-4 md:w-2/3 rounded-xl border">
-          {props.idea?.ideaCreator.id === userInfo.userId && (
-            <Link href={`/ideas/${props.idea?.id}/edit`}>
-              <a className="block fixed right-40 bottom-40 py-2 px-8 rounded-3xl border border-blue-600">
-                編集する
-              </a>
-            </Link>
-          )}
-          <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
-          <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
-
-          <div>
-            <IdeaMarkdown markdown={props.idea?.content ?? ""} />
-          </div>
-
-          {/* コメント */}
-          <div className="bg-yellow-200">
-            {props.idea?.targetIdea.edges.length === 0 ? (
-              <div>コメントはありません</div>
-            ) : (
-              <div>
-                {props.idea?.targetIdea.edges.map((thread) => {
-                  return (
-                    <div key={thread?.node?.id} className="p-2 my-2 border border-red-200">
-                      <div>
-                        {thread?.node?.targetThread.edges.map((comment) => {
-                          return (
-                            <div
-                              key={comment?.node?.id}
-                              className="p-2 bg-blue-100 border border-gray-500"
-                            >
-                              <p>{comment?.node?.content}</p>
-                            </div>
-                          );
-                        })}
-                        <button className="block p-2 bg-blue-300 rounded border">
-                          コメントを追加
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+      {props.idea?.isPublished || props.idea?.ideaCreator.id === userInfo.userId ? (
+        <div className="md:flex">
+          <article className="p-2 md:mr-4 md:w-2/3 rounded-xl border">
+            {props.idea?.ideaCreator.id === userInfo.userId && (
+              <Link href={`/ideas/${props.idea?.id}/edit`}>
+                <a className="block fixed right-40 bottom-40 py-2 px-8 rounded-3xl border border-blue-600">
+                  編集する
+                </a>
+              </Link>
             )}
-          </div>
+            <h1 className="text-2xl font-bold text-center">{props.idea?.title}</h1>
+            <p className="text-sm text-gray-700">{props.idea?.createdAt}</p>
 
-          <div>
-            <h3 className="mt-4 font-bold">コメントする</h3>
-            <NewCommentForm ideaId={props.idea?.id ?? ""} />
-          </div>
-        </article>
-
-        {/* サイドバー */}
-        <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
-          {/* トピック */}
-          <div className="flex items-center">
-            {props.idea?.topics.edges.length === 0 && <p>トピックはありません</p>}
-            {props.idea?.topics.edges.map((topic) => {
-              return (
-                <div key={topic?.node?.id} className="border">
-                  <Link href={`/topics/${topic?.node?.name}`}>
-                    <a>{topic?.node?.name}</a>
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-          <div>
-            <div className="flex items-center">
-              <img
-                className="block object-cover overflow-hidden w-14 h-14 rounded-full"
-                src={
-                  props.idea?.ideaCreator.relatedUser?.profileImage
-                    ? `${MEDIAFILE_API_ENDPOINT}${props.idea.ideaCreator.relatedUser.profileImage}`
-                    : props.idea?.ideaCreator.relatedUser?.googleImageUrl ?? ""
-                }
-                alt=""
-              />
-              <div>{props.idea?.ideaCreator.relatedUser?.profileName}</div>
+            <div>
+              <IdeaMarkdown markdown={props.idea?.content ?? ""} />
             </div>
-            <p>{props.idea?.ideaCreator.relatedUser?.selfIntroduction}</p>
-          </div>
-          <LikeButton ideaId={props.idea?.id ?? ""} />
 
-          {props.idea?.likedIdea.edges.length.toString()}
-        </aside>
-      </div>
+            {/* コメント */}
+            <div className="bg-yellow-200">
+              {props.idea?.targetIdea.edges.length === 0 ? (
+                <div>コメントはありません</div>
+              ) : (
+                <div>
+                  {props.idea?.targetIdea.edges.map((thread) => {
+                    return (
+                      <div key={thread?.node?.id} className="p-2 my-2 border border-red-200">
+                        <div>
+                          {thread?.node?.targetThread.edges.map((comment) => {
+                            return (
+                              <div
+                                key={comment?.node?.id}
+                                className="p-2 bg-blue-100 border border-gray-500"
+                              >
+                                <p>{comment?.node?.content}</p>
+                              </div>
+                            );
+                          })}
+                          <button className="block p-2 bg-blue-300 rounded border">
+                            コメントを追加
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h3 className="mt-4 font-bold">コメントする</h3>
+              <NewCommentForm ideaId={props.idea?.id ?? ""} />
+            </div>
+          </article>
+
+          {/* サイドバー */}
+          <aside className="p-2 md:ml-4 md:w-1/3 rounded-xl border">
+            {/* トピック */}
+            <div className="flex items-center">
+              {props.idea?.topics.edges.length === 0 && <p>トピックはありません</p>}
+              {props.idea?.topics.edges.map((topic) => {
+                return (
+                  <div key={topic?.node?.id} className="border">
+                    <Link href={`/topics/${topic?.node?.name}`}>
+                      <a>{topic?.node?.name}</a>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+            <div>
+              <div className="flex items-center">
+                <img
+                  className="block object-cover overflow-hidden w-14 h-14 rounded-full"
+                  src={
+                    props.idea?.ideaCreator.relatedUser?.profileImage
+                      ? `${MEDIAFILE_API_ENDPOINT}${props.idea.ideaCreator.relatedUser.profileImage}`
+                      : props.idea?.ideaCreator.relatedUser?.googleImageUrl ?? ""
+                  }
+                  alt=""
+                />
+                <div>{props.idea?.ideaCreator.relatedUser?.profileName}</div>
+              </div>
+              <p>{props.idea?.ideaCreator.relatedUser?.selfIntroduction}</p>
+            </div>
+            <LikeButton ideaId={props.idea?.id ?? ""} />
+
+            {props.idea?.likedIdea.edges.length.toString()}
+          </aside>
+        </div>
+      ) : (
+        <div>
+          <div>非公開か削除されたアイデアです</div>
+        </div>
+      )}
     </>
   );
 };

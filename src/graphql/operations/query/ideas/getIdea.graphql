@@ -3,6 +3,7 @@ query GetIdea($id: ID!) {
     id
     title
     content
+    isPublished
     createdAt
     updatedAt
     topics {

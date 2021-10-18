@@ -1688,7 +1688,7 @@ export type GetIdeaQuery = (
   { __typename?: 'Query' }
   & { idea?: Maybe<(
     { __typename?: 'IdeaNode' }
-    & Pick<IdeaNode, 'id' | 'title' | 'content' | 'createdAt' | 'updatedAt'>
+    & Pick<IdeaNode, 'id' | 'title' | 'content' | 'isPublished' | 'createdAt' | 'updatedAt'>
     & { topics: (
       { __typename?: 'TopicNodeConnection' }
       & { edges: Array<Maybe<(
@@ -2730,6 +2730,7 @@ export const GetIdeaDocument = gql`
     id
     title
     content
+    isPublished
     createdAt
     updatedAt
     topics {
