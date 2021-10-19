@@ -5,6 +5,9 @@ type Props = {
 };
 
 export const IdeaMarkdown: React.FC<Props> = (props) => {
+  if (props.markdown === "") {
+    return <div>コンテンツがありません</div>;
+  }
   return (
     // eslint-disable-next-line tailwindcss/no-custom-classname
     <div className="pb-6 markdown">
