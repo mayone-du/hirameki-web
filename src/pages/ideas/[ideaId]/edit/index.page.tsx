@@ -47,7 +47,12 @@ const IdeaEditIndexPage: CustomNextPage = () => {
       {!userInfo.isLoading && userInfo.isLogin && data?.idea?.ideaCreator.id === userInfo.userId && (
         <div>
           <h1>アイデアの編集</h1>
-          <IdeaEditor title={data.idea.title} markdown={data.idea.content} ideaId={ideaId} />
+          <IdeaEditor
+            title={data.idea.title}
+            isPublished={data.idea.isPublished}
+            markdown={data.idea.content}
+            ideaId={ideaId}
+          />
         </div>
       )}
 

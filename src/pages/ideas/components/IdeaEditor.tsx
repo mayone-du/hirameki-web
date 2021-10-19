@@ -9,12 +9,14 @@ import { useCreateIdeaMutation, useUpdateIdeaMutation } from "src/graphql/schema
 
 type Props = {
   title: string;
+  isPublished: boolean;
   markdown: string;
   ideaId?: string;
 };
 export const IdeaEditor: React.VFC<Props> = (props) => {
   const [markdownValue, setMarkdownValue] = useState(props.markdown);
   const [title, setTitle] = useState(props.title);
+  const [isPublished, setIsPublished] = useState(props.isPublished);
   const [createIdea, { loading: isCreateLoading }] = useCreateIdeaMutation();
   const [updateIdea, { loading: isUpdateLoding }] = useUpdateIdeaMutation();
 
@@ -24,6 +26,11 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
 
   const handleChangeTitle = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+  }, []);
+  const handleChangePublish = useCallback(() => {
+    setIsPublished((prev) => {
+      return !prev;
+    });
   }, []);
 
   const editorOptions: EasyMDE.Options = useMemo(() => {
@@ -43,6 +50,7 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
         variables: {
           title: title,
           content: markdownValue,
+          isPublished: isPublished,
         },
       });
       if (errors) throw errors;
@@ -63,6 +71,7 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
           ideaId: props.ideaId ?? "",
           title: title,
           content: markdownValue,
+          isPublished: isPublished,
         },
       });
       if (errors) throw errors;
@@ -76,6 +85,16 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
   return (
     <div>
       <div>
+        <input
+          type="text"
+          className="block p-2 border"
+          placeholder="タイトル"
+          value={title}
+          onChange={handleChangeTitle}
+        />
+        <button className="block" onClick={handleChangePublish}>
+          {isPublished ? "このままだと公開" : "このままだと非公開"}
+        </button>
         <SimpleMdeReact
           value={markdownValue}
           onChange={handleChangeMarkdown}
@@ -85,13 +104,6 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
 
       <div>
         <h2 className="text-2xl font-bold text-center">Preview</h2>
-        <input
-          type="text"
-          className="block p-2 border"
-          placeholder="タイトル"
-          value={title}
-          onChange={handleChangeTitle}
-        />
         <IdeaMarkdown markdown={markdownValue} />
       </div>
 

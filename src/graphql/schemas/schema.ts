@@ -122,6 +122,7 @@ export type CreateFollowMutationPayload = {
 export type CreateIdeaMutationInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   content: Scalars['String'];
+  isPublished?: Maybe<Scalars['Boolean']>;
   title: Scalars['String'];
   topicIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
@@ -1368,6 +1369,7 @@ export type UpdateFollowMutation = (
 export type CreateIdeaMutationVariables = Exact<{
   title: Scalars['String'];
   content: Scalars['String'];
+  isPublished?: Maybe<Scalars['Boolean']>;
   topicIds?: Maybe<Array<Maybe<Scalars['ID']>> | Maybe<Scalars['ID']>>;
 }>;
 
@@ -2142,8 +2144,10 @@ export type UpdateFollowMutationHookResult = ReturnType<typeof useUpdateFollowMu
 export type UpdateFollowMutationResult = Apollo.MutationResult<UpdateFollowMutation>;
 export type UpdateFollowMutationOptions = Apollo.BaseMutationOptions<UpdateFollowMutation, UpdateFollowMutationVariables>;
 export const CreateIdeaDocument = gql`
-    mutation CreateIdea($title: String!, $content: String!, $topicIds: [ID]) {
-  createIdea(input: {title: $title, content: $content, topicIds: $topicIds}) {
+    mutation CreateIdea($title: String!, $content: String!, $isPublished: Boolean, $topicIds: [ID]) {
+  createIdea(
+    input: {title: $title, content: $content, isPublished: $isPublished, topicIds: $topicIds}
+  ) {
     idea {
       id
     }
@@ -2167,6 +2171,7 @@ export type CreateIdeaMutationFn = Apollo.MutationFunction<CreateIdeaMutation, C
  *   variables: {
  *      title: // value for 'title'
  *      content: // value for 'content'
+ *      isPublished: // value for 'isPublished'
  *      topicIds: // value for 'topicIds'
  *   },
  * });
@@ -3185,7 +3190,7 @@ export const GetUserDocument = gql`
           }
           createdAt
           updatedAt
-          likedIdea {
+          likedIdea(isLiked: true) {
             edges {
               node {
                 id

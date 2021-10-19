@@ -44,7 +44,7 @@ query GetUser($id: ID!) {
           }
           createdAt
           updatedAt
-          likedIdea {
+          likedIdea(isLiked: true) {
             edges {
               node {
                 id

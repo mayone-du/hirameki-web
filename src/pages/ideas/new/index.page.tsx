@@ -28,7 +28,7 @@ const IdeaNewIndexPage: CustomNextPage = () => {
       {!userInfo.isLoading && userInfo.isLogin && (
         <div>
           <h1>アイデアの作成</h1>
-          <IdeaEditor title="" markdown="" />
+          <IdeaEditor title="" isPublished={false} markdown="" />
         </div>
       )}
 
