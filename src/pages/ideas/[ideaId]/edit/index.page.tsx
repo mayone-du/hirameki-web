@@ -51,6 +51,9 @@ const IdeaEditIndexPage: CustomNextPage = () => {
             title={data.idea.title}
             isPublished={data.idea.isPublished}
             markdown={data.idea.content}
+            topicIds={data.idea.topics.edges.map((topic) => {
+              return topic?.node?.id ?? "";
+            })}
             ideaId={ideaId}
           />
         </div>

@@ -7,12 +7,17 @@ import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { SimpleMdeReact } from "react-simplemde-editor";
 import { IdeaMarkdown } from "src/components/IdeaMarkdown";
-import { useCreateIdeaMutation, useUpdateIdeaMutation } from "src/graphql/schemas/schema";
+import {
+  useCreateIdeaMutation,
+  useGetAllTopicsQuery,
+  useUpdateIdeaMutation,
+} from "src/graphql/schemas/schema";
 
 type Props = {
   title: string;
   isPublished: boolean;
   markdown: string;
+  topicIds: string[];
   ideaId?: string;
 };
 export const IdeaEditor: React.VFC<Props> = (props) => {
@@ -20,9 +25,11 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
   const [markdownValue, setMarkdownValue] = useState(props.markdown);
   const [title, setTitle] = useState(props.title);
   const [isPublished, setIsPublished] = useState(props.isPublished);
+  const [topicIds, setTopicIds] = useState(props.topicIds);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [createIdea, { loading: isCreateLoading }] = useCreateIdeaMutation();
   const [updateIdea, { loading: isUpdateLoding }] = useUpdateIdeaMutation();
+  const { data: topicsData } = useGetAllTopicsQuery();
 
   const handleChangeMarkdown = useCallback((markdownValue: string) => {
     setMarkdownValue(markdownValue);
@@ -119,6 +126,22 @@ export const IdeaEditor: React.VFC<Props> = (props) => {
         <button className="block border" onClick={handleChangePublish}>
           {isPublished ? "このままだと公開" : "このままだと非公開"}
         </button>
+
+        <div>
+          {/* すべてのトピックを取得し、選択されているトピックは色をつける */}
+          {topicsData?.allTopics?.edges.map((topic) => {
+            return (
+              <button
+                className={`p-1 text-xs rounded-sm border ${
+                  topicIds.includes(topic?.node?.id ?? "") ? "bg-yellow-500" : "bg-white"
+                }`}
+                key={topic?.node?.id}
+              >
+                {topic?.node?.name}
+              </button>
+            );
+          })}
+        </div>
         <Switch
           checked={isPreviewMode}
           // eslint-disable-next-line react/jsx-handler-names
