@@ -18,6 +18,22 @@ export const IdeaList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
                     <h3 className="text-lg font-bold">{idea?.node?.title}</h3>
                   </a>
                 </Link>
+                {/* トピック */}
+                <div>
+                  {idea?.node?.topics.edges.map((topic) => {
+                    return (
+                      <div key={topic?.node?.id} className="flex gap-4">
+                        <Link href={`/topics/${topic?.node?.name}`}>
+                          <a className="block px-1 text-xs text-gray-500 rounded-sm border">
+                            {topic?.node?.name}
+                          </a>
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* ユーザーアイコンなど */}
                 <div className="flex items-center">
                   <Link href={`/users/${idea?.node?.ideaCreator.id}`}>
                     <a className="block">
