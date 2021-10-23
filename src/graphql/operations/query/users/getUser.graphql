@@ -54,5 +54,22 @@ query GetUser($id: ID!) {
         }
       }
     }
+    memoCreator {
+      edges {
+        node {
+          id
+          title
+          isPublished
+          createdAt
+          likedMemo(isLiked: true) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

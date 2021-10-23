@@ -177,6 +177,18 @@ const UsersDetailPage: CustomNextPage<GetUserQuery | undefined> = (props) => {
             );
           })}
         </div>
+
+        <div>
+          メモ
+          <br />
+          {props.user?.memoCreator.edges.map((memo) => {
+            return (
+              <div key={memo?.node?.id}>
+                <p>{memo?.node?.title}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </>
   );
