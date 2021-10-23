@@ -1,0 +1,10 @@
+query GetUserMemos($userId: ID!) {
+  userMemos(userId: $userId) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+}

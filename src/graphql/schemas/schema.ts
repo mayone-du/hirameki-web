@@ -678,6 +678,7 @@ export type Query = {
   myUserInfo?: Maybe<UserNode>;
   topic?: Maybe<TopicNode>;
   user?: Maybe<UserNode>;
+  userMemos?: Maybe<MemoNodeConnection>;
 };
 
 
@@ -863,6 +864,20 @@ export type QueryTopicArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryUserMemosArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  isPublished?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  memoCreator?: Maybe<Scalars['ID']>;
+  offset?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  title_Icontains?: Maybe<Scalars['String']>;
+  userId: Scalars['ID'];
 };
 
 export type ReportNode = Node & {
@@ -1801,6 +1816,25 @@ export type GetMyLikeIdeasQuery = (
           { __typename?: 'IdeaNode' }
           & Pick<IdeaNode, 'id'>
         )> }
+      )> }
+    )>> }
+  )> }
+);
+
+export type GetUserMemosQueryVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type GetUserMemosQuery = (
+  { __typename?: 'Query' }
+  & { userMemos?: Maybe<(
+    { __typename?: 'MemoNodeConnection' }
+    & { edges: Array<Maybe<(
+      { __typename?: 'MemoNodeEdge' }
+      & { node?: Maybe<(
+        { __typename?: 'MemoNode' }
+        & Pick<MemoNode, 'id' | 'title'>
       )> }
     )>> }
   )> }
@@ -2922,6 +2956,46 @@ export function useGetMyLikeIdeasLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetMyLikeIdeasQueryHookResult = ReturnType<typeof useGetMyLikeIdeasQuery>;
 export type GetMyLikeIdeasLazyQueryHookResult = ReturnType<typeof useGetMyLikeIdeasLazyQuery>;
 export type GetMyLikeIdeasQueryResult = Apollo.QueryResult<GetMyLikeIdeasQuery, GetMyLikeIdeasQueryVariables>;
+export const GetUserMemosDocument = gql`
+    query GetUserMemos($userId: ID!) {
+  userMemos(userId: $userId) {
+    edges {
+      node {
+        id
+        title
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserMemosQuery__
+ *
+ * To run a query within a React component, call `useGetUserMemosQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserMemosQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserMemosQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserMemosQuery(baseOptions: Apollo.QueryHookOptions<GetUserMemosQuery, GetUserMemosQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserMemosQuery, GetUserMemosQueryVariables>(GetUserMemosDocument, options);
+      }
+export function useGetUserMemosLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserMemosQuery, GetUserMemosQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserMemosQuery, GetUserMemosQueryVariables>(GetUserMemosDocument, options);
+        }
+export type GetUserMemosQueryHookResult = ReturnType<typeof useGetUserMemosQuery>;
+export type GetUserMemosLazyQueryHookResult = ReturnType<typeof useGetUserMemosLazyQuery>;
+export type GetUserMemosQueryResult = Apollo.QueryResult<GetUserMemosQuery, GetUserMemosQueryVariables>;
 export const SearchItemsDocument = gql`
     query SearchItems($keyword: String!) {
   allIdeas(title_Icontains: $keyword) {

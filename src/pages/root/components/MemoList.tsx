@@ -12,7 +12,7 @@ export const MemoList: React.VFC<GetIndexPageItemsQuery | undefined> = (props) =
           {props?.allMemos?.edges.map((memo) => {
             return (
               <li className="p-4 md:p-2 m-2 rounded border shadow-sm" key={memo?.node?.id}>
-                <Link href="/">
+                <Link href={`/users/${memo?.node?.memoCreator.id}/memos`}>
                   <a className="block">{memo?.node?.title}</a>
                 </Link>
                 <div className="flex items-center">
