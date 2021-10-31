@@ -29,4 +29,5 @@ module.exports = {
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   },
   pageExtensions: ["page.tsx", "page.ts"],
+  swcMinify: true,
 };
